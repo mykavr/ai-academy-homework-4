@@ -10,7 +10,13 @@
   - Create basic configuration file with default parameters
   - _Requirements: 9.1, 9.3_
 
-- [ ] 2. Implement PDF loader
+- [x] 2. Implement PDF loader
+
+
+
+
+
+
   - Create PDFLoader class using pdfplumber
   - Implement load() method to extract text from PDF files
   - Implement load_with_metadata() method to include page numbers
