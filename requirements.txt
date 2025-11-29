@@ -2,7 +2,8 @@
 pdfplumber==0.11.0
 
 # Audio/Video Processing
-openai-whisper==20231117
+openai-whisper==20231117  # Optional: requires Python < 3.14
+vosk==0.3.45  # Recommended for Python 3.14+
 moviepy==1.0.3
 
 # Text Processing and Chunking

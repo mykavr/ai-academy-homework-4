@@ -103,7 +103,11 @@
     - Test query result limiting with various top_k values
     - _Requirements: 6.1, 6.2, 6.3_
 
-- [ ] 6. Implement audio transcriber
+- [x] 6. Implement audio transcriber
+
+
+
+
   - Create AudioTranscriber class using openai-whisper
   - Load Whisper model (base or small)
   - Implement transcribe() method to convert audio to text

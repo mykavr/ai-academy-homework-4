@@ -25,8 +25,14 @@ class RAGConfig:
     # Retrieval parameters
     top_k: int = 5
     
+    # Audio transcription backend
+    transcription_backend: str = "vosk"  # Options: auto, whisper, vosk
+    
     # Whisper model for audio transcription
     whisper_model: str = "base"  # Options: tiny, base, small, medium, large
+    
+    # Vosk model path
+    vosk_model_path: str = "models/vosk-model-small-en-us-0.15"
     
     # File size limits (in MB)
     max_pdf_size: int = 100
