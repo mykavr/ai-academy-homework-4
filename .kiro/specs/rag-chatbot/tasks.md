@@ -23,14 +23,21 @@
   - Handle errors for invalid/corrupted PDFs
   - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
-- [ ] 3. Implement text chunking with unit tests
-  - [ ] 3.1 Create TextChunker class using LangChain's RecursiveCharacterTextSplitter
+- [x] 3. Implement text chunking with unit tests
+
+
+
+  - [x] 3.1 Create TextChunker class using LangChain's RecursiveCharacterTextSplitter
+
+
     - Initialize with all-mpnet-base-v2 tokenizer from Hugging Face
     - Implement chunk_text() method with 512 token size and 75 token overlap
     - Implement chunk_with_metadata() method to include source information
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
   
-  - [ ] 3.2 Write unit tests for text chunking
+  - [x] 3.2 Write unit tests for text chunking
+
+
 
     - Test chunking with known text samples
     - Test edge cases: empty text, single-sentence text, very long text
