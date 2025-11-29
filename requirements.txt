@@ -1,0 +1,27 @@
+# PDF Processing
+pdfplumber==0.11.0
+
+# Audio/Video Processing
+openai-whisper==20231117
+moviepy==1.0.3
+
+# Text Processing and Chunking
+langchain-text-splitters==0.2.2
+sentence-transformers==2.7.0
+
+# Embeddings
+torch==2.3.1
+transformers==4.41.2
+
+# Vector Database
+chromadb==0.5.0
+
+# LLM Interface
+openai==1.35.3
+
+# Utilities
+numpy==1.26.4
+tqdm==4.66.4
+
+# Testing
+pytest==8.2.2
