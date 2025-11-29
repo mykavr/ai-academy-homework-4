@@ -45,15 +45,23 @@
     - Verify chunk sizes respect token limits
     - _Requirements: 4.1, 4.3_
 
-- [ ] 4. Implement embedding model with unit tests
-  - [ ] 4.1 Create EmbeddingModel class using sentence-transformers
+- [x] 4. Implement embedding model with unit tests
+
+
+
+
+  - [x] 4.1 Create EmbeddingModel class using sentence-transformers
+
+
     - Load all-mpnet-base-v2 model
     - Implement embed() method for single text
     - Implement embed_batch() method for multiple texts
     - Handle embedding generation errors
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
   
-  - [ ] 4.2 Write unit tests for embedding model
+  - [x] 4.2 Write unit tests for embedding model
+
+
 
     - Test embedding generation with sample texts
     - Test batch embedding with multiple chunks
