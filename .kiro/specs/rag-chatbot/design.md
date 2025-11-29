@@ -91,7 +91,7 @@ Model selection rationale:
 
 **VectorStore**
 - Responsibility: Store and query vector embeddings
-- Library: ChromaDB (recommended for simplicity)
+- Library: Qdrant (recommended for Python 3.14 compatibility and performance)
 - Interface:
   - `add_documents(texts: list[str], embeddings: list[list[float]], metadata: list[dict]) -> None`
   - `query(query_embedding: list[float], top_k: int) -> list[dict]`: Returns top-k similar documents
@@ -101,9 +101,9 @@ Schema:
 ```python
 {
     "id": "unique_id",
-    "text": "chunk content",
-    "embedding": [0.1, 0.2, ...],
-    "metadata": {
+    "vector": [0.1, 0.2, ...],  # 768-dimensional embedding
+    "payload": {
+        "text": "chunk content",
         "source": "filename",
         "chunk_index": 0,
         "source_type": "pdf|audio|video"
@@ -334,11 +334,11 @@ tests/
 - High quality semantic representations
 - Local execution
 
-**Vector Database**: Use ChromaDB
-- Simple setup with no external dependencies
-- Persistent storage
-- Good performance for small to medium datasets
-- Runs entirely locally
+**Vector Database**: Use Qdrant
+- Simple setup with in-memory or persistent storage options
+- Excellent Python 3.14 compatibility
+- High performance for similarity search
+- Runs entirely locally with no external dependencies
 
 **LLM**: Use LM Studio with local models
 - OpenAI-compatible API at http://localhost:1234/v1
@@ -373,7 +373,7 @@ config = {
     "chunk_size": 512,  # tokens
     "chunk_overlap": 75,  # tokens (15%)
     "embedding_model": "all-mpnet-base-v2",
-    "vector_db_path": "./chroma_db",
+    "vector_db_path": "./qdrant_storage",
     "lm_studio_url": "http://localhost:1234/v1",
     "top_k": 5
 }

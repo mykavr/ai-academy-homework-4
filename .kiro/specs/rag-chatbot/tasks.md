@@ -69,16 +69,32 @@
     - Test consistency: same text produces same embedding
     - _Requirements: 5.2_
 
-- [ ] 5. Implement vector store with unit tests
-  - [ ] 5.1 Create VectorStore class using ChromaDB
-    - Initialize ChromaDB with persistent storage
+- [x] 5. Implement vector store with unit tests
+
+
+
+
+
+
+  - [x] 5.1 Create VectorStore class using Qdrant
+
+
+    - Initialize Qdrant client with in-memory or persistent storage
+    - Create collection with 768-dimensional vectors
     - Implement add_documents() method to store embeddings with metadata
     - Implement query() method to retrieve top-k similar documents
     - Implement clear() method for database reset
     - Handle storage errors and maintain consistency
     - _Requirements: 6.1, 6.2, 6.3, 6.4_
   
-  - [ ] 5.2 Write unit tests for vector store
+  - [x] 5.2 Write unit tests for vector store
+
+
+
+
+
+
+
 
     - Test adding and retrieving documents
     - Test metadata preservation with specific examples
