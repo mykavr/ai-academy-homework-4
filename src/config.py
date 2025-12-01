@@ -21,6 +21,8 @@ class RAGConfig:
     
     # LM Studio configuration
     lm_studio_url: str = "http://localhost:1234/v1"
+    llm_timeout: int = 60  # seconds - max wait time for LLM response
+    llm_debug_logging: bool = False  # when True, logs full LLM requests and responses
     
     # Retrieval parameters
     top_k: int = 5

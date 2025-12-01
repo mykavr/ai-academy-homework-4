@@ -45,6 +45,8 @@ class RAGChatbot:
         chunk_overlap: int = 75,
         embedding_model: str = "all-mpnet-base-v2",
         lm_studio_url: str = "http://localhost:1234/v1",
+        llm_timeout: int = 60,
+        llm_debug_logging: bool = False,
         top_k: int = 5
     ):
         """
@@ -58,6 +60,8 @@ class RAGChatbot:
             chunk_overlap: Token overlap between chunks
             embedding_model: Name of the sentence-transformers model
             lm_studio_url: URL for LM Studio server
+            llm_timeout: Maximum wait time for LLM response in seconds
+            llm_debug_logging: When True, logs full LLM requests and responses
             top_k: Number of chunks to retrieve for each query
             
         Raises:
@@ -93,7 +97,7 @@ class RAGChatbot:
             
             # Initialize LLM interface
             logger.info("Initializing LLM interface...")
-            self.llm = LLMInterface(base_url=lm_studio_url)
+            self.llm = LLMInterface(base_url=lm_studio_url, timeout=llm_timeout, debug_logging=llm_debug_logging)
             
             logger.info("RAG Chatbot initialized successfully")
             

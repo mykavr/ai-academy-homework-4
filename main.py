@@ -380,7 +380,9 @@ Examples:
         chatbot = RAGChatbot(
             model_path=args.model_path,
             persist_directory=args.db_path,
-            lm_studio_url=args.lm_studio_url
+            lm_studio_url=args.lm_studio_url,
+            llm_timeout=default_config.llm_timeout,
+            llm_debug_logging=default_config.llm_debug_logging
         )
         print("✅ Chatbot initialized successfully")
         print()

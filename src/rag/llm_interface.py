@@ -8,6 +8,9 @@ for generating answers based on retrieved context chunks.
 from typing import List
 from openai import OpenAI
 import httpx
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class LLMError(Exception):
@@ -23,29 +26,37 @@ class LLMInterface:
     API keys or cloud connections.
     """
     
-    def __init__(self, base_url: str = "http://localhost:1234/v1", model: str = "local-model"):
+    def __init__(self, base_url: str = "http://localhost:1234/v1", model: str = "local-model", timeout: int = 60, debug_logging: bool = False):
         """
         Initialize the LLM interface.
         
         Args:
             base_url: The base URL for the LM Studio server (default: http://localhost:1234/v1)
             model: The model identifier (default: "local-model")
+            timeout: Maximum wait time for LLM response in seconds (default: 60)
+            debug_logging: When True, logs full LLM requests and responses (default: False)
         """
         self.base_url = base_url
         self.model = model
+        self.timeout = timeout
+        self.debug_logging = debug_logging
         
         try:
             # Create a custom httpx client to work around Python 3.14 compatibility issues
+            # The timeout is set on the httpx client for connection-level timeouts
             http_client = httpx.Client(
                 base_url=base_url,
-                timeout=30.0
+                timeout=float(timeout)
             )
             
             # Initialize OpenAI client pointing to LM Studio
+            # Pass both the custom http_client AND the timeout parameter
+            # The timeout parameter ensures the entire API call respects the timeout
             self.client = OpenAI(
                 base_url=base_url,
                 api_key="not-needed",  # LM Studio doesn't require an API key
-                http_client=http_client
+                http_client=http_client,
+                timeout=float(timeout)  # This controls the overall API call timeout
             )
         except Exception as e:
             raise LLMError(f"Failed to initialize LLM client: {str(e)}")
@@ -77,27 +88,56 @@ class LLMInterface:
             # Create the prompt
             prompt = self._create_prompt(question, formatted_context)
             
+            # Prepare messages
+            messages = [
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant answering questions about lecture content. "
+                               "Answer based on the context provided. If the context doesn't contain "
+                               "relevant information, say so clearly."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+            
+            # Log request if debug logging is enabled
+            if self.debug_logging:
+                logger.info("=" * 80)
+                logger.info("LLM REQUEST")
+                logger.info("=" * 80)
+                logger.info(f"Model: {self.model}")
+                logger.info(f"Temperature: 0.7")
+                logger.info(f"Max tokens: 500")
+                logger.info(f"Messages:")
+                for i, msg in enumerate(messages):
+                    logger.info(f"  [{i}] Role: {msg['role']}")
+                    logger.info(f"      Content: {msg['content']}")
+                logger.info("=" * 80)
+            
             # Call the LLM
             response = self.client.chat.completions.create(
                 model=self.model,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are a helpful assistant answering questions about lecture content. "
-                                   "Answer based on the context provided. If the context doesn't contain "
-                                   "relevant information, say so clearly."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
+                messages=messages,
                 temperature=0.7,
                 max_tokens=500
             )
             
             # Extract the answer
             answer = response.choices[0].message.content
+            
+            # Log response if debug logging is enabled
+            if self.debug_logging:
+                logger.info("=" * 80)
+                logger.info("LLM RESPONSE")
+                logger.info("=" * 80)
+                logger.info(f"Answer: {answer}")
+                logger.info(f"Finish reason: {response.choices[0].finish_reason}")
+                logger.info(f"Model: {response.model}")
+                if hasattr(response, 'usage') and response.usage:
+                    logger.info(f"Usage: {response.usage}")
+                logger.info("=" * 80)
             
             if not answer or not answer.strip():
                 raise LLMError("LLM returned an empty response")
