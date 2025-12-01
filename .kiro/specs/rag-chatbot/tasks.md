@@ -154,14 +154,25 @@
   - Wire all components together with proper error handling
   - _Requirements: 1.1, 2.1, 3.1, 4.1, 5.1, 6.1, 7.1, 7.2, 7.3, 8.1, 8.2_
 
-- [ ] 10. Create main entry point and CLI
+- [x] 10. Create main entry point and CLI
+
+
+
+
+
+
   - Create main.py with command-line interface
   - Add commands for ingesting PDFs, audio, and video files
   - Add interactive question-answering mode
   - Display retrieved context and generated answers
   - _Requirements: 7.1, 8.2_
 
-- [ ] 11. Create documentation
+- [x] 11. Create documentation
+
+
+
+
+
 
   - Write README.md with setup instructions
   - Document LM Studio setup and model requirements
