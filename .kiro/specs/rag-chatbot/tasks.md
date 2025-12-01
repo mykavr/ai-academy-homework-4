@@ -115,7 +115,12 @@
   - Handle transcription errors and unsupported formats
   - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-- [ ] 7. Implement video processor
+- [x] 7. Implement video processor
+
+
+
+
+
   - Create VideoProcessor class using moviepy
   - Implement extract_audio() method to extract audio from video
   - Implement process_video() method that extracts audio and triggers transcription

@@ -1,12 +1,17 @@
 """Integration test script for the RAG pipeline.
 
-This script tests the complete flow: PDF loading → chunking → embedding → vector storage.
+This script tests the complete flow for any supported file type:
+- PDF: PDF loading → chunking → embedding → vector storage
+- Audio: Audio transcription → chunking → embedding → vector storage
+- Video: Video processing (audio extraction + transcription) → chunking → embedding → vector storage
 
 Usage:
-    python tests/manual/test_integration.py <path_to_pdf_file>
+    python tests/manual/test_integration.py <path_to_file>
 
-Example:
+Examples:
     python tests/manual/test_integration.py sample.pdf
+    python tests/manual/test_integration.py lecture.mp3
+    python tests/manual/test_integration.py recording.mp4
     python tests/manual/test_integration.py "C:/Documents/my document.pdf"
 """
 
@@ -19,7 +24,11 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 # Import all components
-from src.loaders import PDFLoader, PDFProcessingError
+from src.loaders import (
+    PDFLoader, PDFProcessingError,
+    AudioTranscriber, TranscriptionError, UnsupportedFormatError,
+    VideoProcessor, VideoProcessingError
+)
 from src.processing import TextChunker
 from src.embeddings import EmbeddingModel, EmbeddingError, ModelLoadError
 from src.storage import VectorStore, StorageError
@@ -53,37 +62,129 @@ def print_info(label: str, value):
     print(f"  • {label}: {value}")
 
 
-def step1_load_pdf(pdf_path: str) -> Dict:
-    """Step 1: Load PDF and extract text."""
-    print_step(1, "Loading PDF")
+def detect_file_type(file_path: str) -> str:
+    """Detect the file type based on extension."""
+    path = Path(file_path)
+    extension = path.suffix.lower()
     
-    try:
-        loader = PDFLoader()
-        result = loader.load_with_metadata(pdf_path)
-        
-        print_success(f"PDF loaded successfully")
-        print_info("Source", result['source'])
-        print_info("Total pages", result['num_pages'])
-        print_info("Total characters", len(result['text']))
-        print_info("Total lines", len(result['text'].splitlines()))
-        
-        # Show preview
-        preview_length = 200
-        preview = result['text'][:preview_length]
-        print(f"\n  Preview (first {preview_length} chars):")
-        print(f"  {preview}...")
-        
-        return result
-        
-    except (FileNotFoundError, PDFProcessingError) as e:
-        print_error(f"PDF loading failed: {e}")
-        raise
-    except Exception as e:
-        print_error(f"Unexpected error during PDF loading: {e}")
-        raise
+    # PDF formats
+    if extension == '.pdf':
+        return 'pdf'
+    
+    # Audio formats
+    audio_formats = {'.mp3', '.m4a', '.aac', '.wav', '.aiff', '.aif', '.flac', '.ogg', '.opus', '.webm', '.wma'}
+    if extension in audio_formats:
+        return 'audio'
+    
+    # Video formats
+    video_formats = {'.mp4', '.avi', '.mov', '.mkv', '.webm', '.flv', '.wmv', '.m4v', '.mpg', '.mpeg'}
+    if extension in video_formats:
+        return 'video'
+    
+    return 'unknown'
 
 
-def step2_chunk_text(pdf_result: Dict) -> List[Dict]:
+def step1_load_file(file_path: str) -> Dict:
+    """Step 1: Load file and extract text (supports PDF, audio, and video)."""
+    file_type = detect_file_type(file_path)
+    
+    if file_type == 'pdf':
+        print_step(1, "Loading PDF")
+        try:
+            loader = PDFLoader()
+            result = loader.load_with_metadata(file_path)
+            
+            print_success(f"PDF loaded successfully")
+            print_info("Source", result['source'])
+            print_info("File type", "PDF")
+            print_info("Total pages", result['num_pages'])
+            print_info("Total characters", len(result['text']))
+            print_info("Total lines", len(result['text'].splitlines()))
+            
+            # Show preview
+            preview_length = 200
+            preview = result['text'][:preview_length]
+            print(f"\n  Preview (first {preview_length} chars):")
+            print(f"  {preview}...")
+            
+            return result
+            
+        except (FileNotFoundError, PDFProcessingError) as e:
+            print_error(f"PDF loading failed: {e}")
+            raise
+        except Exception as e:
+            print_error(f"Unexpected error during PDF loading: {e}")
+            raise
+    
+    elif file_type == 'audio':
+        print_step(1, "Transcribing Audio")
+        try:
+            transcriber = AudioTranscriber()
+            text = transcriber.transcribe(file_path)
+            
+            print_success(f"Audio transcribed successfully")
+            print_info("Source", Path(file_path).name)
+            print_info("File type", "Audio")
+            print_info("Total characters", len(text))
+            print_info("Total lines", len(text.splitlines()))
+            
+            # Show preview
+            preview_length = 200
+            preview = text[:preview_length]
+            print(f"\n  Preview (first {preview_length} chars):")
+            print(f"  {preview}...")
+            
+            return {
+                'source': Path(file_path).name,
+                'text': text,
+                'source_type': 'audio'
+            }
+            
+        except (FileNotFoundError, UnsupportedFormatError, TranscriptionError) as e:
+            print_error(f"Audio transcription failed: {e}")
+            raise
+        except Exception as e:
+            print_error(f"Unexpected error during audio transcription: {e}")
+            raise
+    
+    elif file_type == 'video':
+        print_step(1, "Processing Video (extracting audio and transcribing)")
+        try:
+            processor = VideoProcessor()
+            text = processor.process_video(file_path)
+            
+            print_success(f"Video processed successfully")
+            print_info("Source", Path(file_path).name)
+            print_info("File type", "Video")
+            print_info("Total characters", len(text))
+            print_info("Total lines", len(text.splitlines()))
+            
+            # Show preview
+            preview_length = 200
+            preview = text[:preview_length]
+            print(f"\n  Preview (first {preview_length} chars):")
+            print(f"  {preview}...")
+            
+            return {
+                'source': Path(file_path).name,
+                'text': text,
+                'source_type': 'video'
+            }
+            
+        except (FileNotFoundError, UnsupportedFormatError, VideoProcessingError) as e:
+            print_error(f"Video processing failed: {e}")
+            raise
+        except Exception as e:
+            print_error(f"Unexpected error during video processing: {e}")
+            raise
+    
+    else:
+        print_error(f"Unsupported file type: {Path(file_path).suffix}")
+        print_info("Supported formats", "PDF (.pdf), Audio (.mp3, .wav, .m4a, etc.), Video (.mp4, .avi, .mov, etc.)")
+        raise ValueError(f"Unsupported file type: {Path(file_path).suffix}")
+
+
+def step2_chunk_text(file_result: Dict) -> List[Dict]:
     """Step 2: Chunk the extracted text."""
     print_step(2, "Chunking text")
     
@@ -91,8 +192,8 @@ def step2_chunk_text(pdf_result: Dict) -> List[Dict]:
         chunker = TextChunker(chunk_size=512, chunk_overlap=75)
         
         chunks = chunker.chunk_with_metadata(
-            text=pdf_result['text'],
-            source=pdf_result['source']
+            text=file_result['text'],
+            source=file_result['source']
         )
         
         print_success(f"Text chunked successfully")
@@ -292,14 +393,16 @@ def step6_cleanup(vector_store: VectorStore):
         raise
 
 
-def print_summary(pdf_result: Dict, chunks: List[Dict], embeddings: List[List[float]]):
+def print_summary(file_result: Dict, chunks: List[Dict], embeddings: List[List[float]]):
     """Print a summary of the integration test."""
     print_header("INTEGRATION TEST SUMMARY")
     
-    print("\nPDF Processing:")
-    print_info("  Source", pdf_result['source'])
-    print_info("  Pages", pdf_result['num_pages'])
-    print_info("  Characters", len(pdf_result['text']))
+    print("\nFile Processing:")
+    print_info("  Source", file_result['source'])
+    print_info("  Type", file_result.get('source_type', 'PDF'))
+    if 'num_pages' in file_result:
+        print_info("  Pages", file_result['num_pages'])
+    print_info("  Characters", len(file_result['text']))
     
     print("\nText Chunking:")
     print_info("  Total chunks", len(chunks))
@@ -324,23 +427,31 @@ def print_summary(pdf_result: Dict, chunks: List[Dict], embeddings: List[List[fl
 def main():
     """Main entry point for the integration test."""
     if len(sys.argv) < 2:
-        print("Usage: python tests/manual/test_integration.py <path_to_pdf_file>")
-        print("\nExample:")
+        print("Usage: python tests/manual/test_integration.py <path_to_file>")
+        print("\nExamples:")
         print("  python tests/manual/test_integration.py sample.pdf")
+        print("  python tests/manual/test_integration.py lecture.mp3")
+        print("  python tests/manual/test_integration.py recording.mp4")
         print('  python tests/manual/test_integration.py "C:/Documents/my document.pdf"')
+        print("\nSupported formats:")
+        print("  - PDF: .pdf")
+        print("  - Audio: .mp3, .wav, .m4a, .aac, .flac, .ogg, etc.")
+        print("  - Video: .mp4, .avi, .mov, .mkv, .webm, etc.")
         sys.exit(1)
     
-    pdf_path = sys.argv[1]
+    file_path = sys.argv[1]
+    file_type = detect_file_type(file_path)
     
     print_header("RAG PIPELINE INTEGRATION TEST")
-    print(f"Testing with file: {pdf_path}\n")
+    print(f"Testing with file: {file_path}")
+    print(f"Detected file type: {file_type.upper()}\n")
     
     try:
-        # Step 1: Load PDF
-        pdf_result = step1_load_pdf(pdf_path)
+        # Step 1: Load file (PDF, audio, or video)
+        file_result = step1_load_file(file_path)
         
         # Step 2: Chunk text
-        chunks = step2_chunk_text(pdf_result)
+        chunks = step2_chunk_text(file_result)
         
         # Step 3: Generate embeddings
         embeddings = step3_generate_embeddings(chunks)
@@ -355,7 +466,7 @@ def main():
         step6_cleanup(vector_store)
         
         # Print summary
-        print_summary(pdf_result, chunks, embeddings)
+        print_summary(file_result, chunks, embeddings)
         
     except Exception as e:
         print("\n" + "="*70)
