@@ -31,27 +31,23 @@ def test_audio_transcription(audio_file=None):
     print("=" * 70)
     
     try:
-        # Initialize transcriber with configured backend
+        # Initialize transcriber
         print(f"\n1. Initializing AudioTranscriber...")
-        print(f"   Backend: {default_config.transcription_backend}")
         print(f"   Model path: {default_config.vosk_model_path}")
         
-        transcriber = AudioTranscriber(
-            backend=default_config.transcription_backend,
-            model_path=default_config.vosk_model_path
-        )
+        transcriber = AudioTranscriber(model_path=default_config.vosk_model_path)
         print("   ✓ AudioTranscriber initialized successfully")
-        print(f"   Backend: {transcriber.backend_name}")
         print(f"   Supported formats: {transcriber.SUPPORTED_FORMATS}")
         
         # Get audio file from argument or use default
         if audio_file is None:
-            audio_file = "path/to/your/audio/file.wav"
+            audio_file = "path/to/your/audio/file.mp3"
         
         if not Path(audio_file).exists():
             print(f"\n⚠ Audio file not found: {audio_file}")
             print("   Please provide an audio file path as an argument:")
-            print('   python tests/manual/test_audio_manual.py "path/to/audio.wav"')
+            print('   python tests/manual/test_audio_manual.py "path/to/audio.mp3"')
+            print("\n   Supported formats: MP3, M4A, AAC, WAV, AIFF, FLAC, OGG, etc.")
             return
         
         # Test basic transcription
@@ -89,10 +85,7 @@ def test_error_handling():
     print("=" * 70)
     
     try:
-        transcriber = AudioTranscriber(
-            backend=default_config.transcription_backend,
-            model_path=default_config.vosk_model_path
-        )
+        transcriber = AudioTranscriber(model_path=default_config.vosk_model_path)
         
         # Test file not found
         print("\n1. Testing FileNotFoundError...")

@@ -1,99 +1,161 @@
-"""Audio transcriber module with pluggable backend support."""
+"""Audio transcriber using Vosk with automatic format conversion."""
 
-from typing import List, Dict, Optional
-from .transcription_backends import (
-    TranscriptionBackend,
-    TranscriptionError,
-    UnsupportedFormatError,
-    WhisperBackend,
-    VoskBackend,
-    WHISPER_AVAILABLE,
-    VOSK_AVAILABLE
-)
+from pathlib import Path
+from typing import List, Dict
+import wave
+import json
+import tempfile
+import os
+
+try:
+    from vosk import Model, KaldiRecognizer
+    VOSK_AVAILABLE = True
+except ImportError:
+    VOSK_AVAILABLE = False
+    Model = None
+    KaldiRecognizer = None
+
+import subprocess
+import shutil
+
+# Check if ffmpeg is available
+FFMPEG_AVAILABLE = shutil.which('ffmpeg') is not None
+
+
+class TranscriptionError(Exception):
+    """Exception raised when audio transcription fails."""
+    pass
+
+
+class UnsupportedFormatError(Exception):
+    """Exception raised when audio format is not supported."""
+    pass
 
 
 class AudioTranscriber:
     """
-    Transcribes audio files to text using pluggable backends.
+    Transcribes audio files to text using Vosk.
     
-    Supports multiple transcription engines:
-    - Whisper (OpenAI): High accuracy, multiple formats, requires Python < 3.14
-    - Vosk: Offline, fast, works with Python 3.14, requires WAV format
+    Automatically converts audio files to the required format (mono WAV, 16kHz).
+    Supports: MP3, M4A, AAC, WAV, AIFF, FLAC, OGG, and more.
     """
     
-    def __init__(self, backend: str = "auto", **backend_kwargs):
+    # Supported input formats (will be converted to WAV if needed)
+    SUPPORTED_FORMATS = {
+        '.mp3', '.m4a', '.aac', '.wav', '.aiff', '.aif',
+        '.flac', '.ogg', '.opus', '.webm', '.wma'
+    }
+    
+    def __init__(self, model_path: str = "models/vosk-model-small-en-us-0.15"):
         """
-        Initialize the AudioTranscriber with a specific backend.
+        Initialize the AudioTranscriber with a Vosk model.
         
         Args:
-            backend: Backend to use for transcription.
-                    Options: "whisper", "vosk", "auto"
-                    - "auto": Automatically select best available backend
-                    - "whisper": Use OpenAI Whisper (requires openai-whisper)
-                    - "vosk": Use Vosk (requires vosk)
-            **backend_kwargs: Additional arguments passed to the backend constructor
-                    For Whisper: model_name="base" (tiny, base, small, medium, large)
-                    For Vosk: model_path="/path/to/vosk/model"
-                    
+            model_path: Path to the Vosk model directory
+                       
         Raises:
-            TranscriptionError: If the backend fails to initialize
+            TranscriptionError: If Vosk or the model fails to load
         """
-        self.backend_name = backend
-        self.backend = self._create_backend(backend, **backend_kwargs)
-    
-    def _create_backend(self, backend: str, **kwargs) -> TranscriptionBackend:
-        """Create and return the appropriate backend."""
-        if backend == "auto":
-            # Try backends in order of preference
-            if VOSK_AVAILABLE:
-                try:
-                    return VoskBackend(**kwargs)
-                except TranscriptionError:
-                    pass  # Try next backend
-            
-            if WHISPER_AVAILABLE:
-                try:
-                    return WhisperBackend(**kwargs)
-                except TranscriptionError:
-                    pass
-            
-            # No backend available
+        if not VOSK_AVAILABLE:
             raise TranscriptionError(
-                "No transcription backend available. Please install one of:\n"
-                "  - vosk: pip install vosk (recommended for Python 3.14)\n"
-                "  - openai-whisper: pip install openai-whisper (requires Python < 3.14)"
+                "Vosk library is not available. Please install vosk: pip install vosk"
             )
         
-        elif backend == "whisper":
-            if not WHISPER_AVAILABLE:
-                raise TranscriptionError(
-                    "Whisper backend not available. Install with: pip install openai-whisper"
-                )
-            return WhisperBackend(**kwargs)
-        
-        elif backend == "vosk":
-            if not VOSK_AVAILABLE:
-                raise TranscriptionError(
-                    "Vosk backend not available. Install with: pip install vosk"
-                )
-            return VoskBackend(**kwargs)
-        
-        else:
+        if not FFMPEG_AVAILABLE:
             raise TranscriptionError(
-                f"Unknown backend: {backend}. Options: 'whisper', 'vosk', 'auto'"
+                "ffmpeg is not available. Please install ffmpeg:\n"
+                "  Windows: Download from https://ffmpeg.org/download.html\n"
+                "  Mac: brew install ffmpeg\n"
+                "  Linux: sudo apt-get install ffmpeg"
+            )
+        
+        self.model_path = model_path
+        self.model = None
+        self._load_model()
+    
+    def _load_model(self):
+        """Load the Vosk model."""
+        try:
+            if not Path(self.model_path).exists():
+                raise TranscriptionError(
+                    f"Vosk model not found at: {self.model_path}\n"
+                    "Download a model using: python download_vosk_model.py\n"
+                    "Or from: https://alphacephei.com/vosk/models"
+                )
+            self.model = Model(self.model_path)
+        except Exception as e:
+            raise TranscriptionError(
+                f"Failed to load Vosk model from '{self.model_path}': {str(e)}"
             )
     
-    @property
-    def SUPPORTED_FORMATS(self):
-        """Get supported formats for the current backend."""
-        return self.backend.SUPPORTED_FORMATS
+    def _convert_to_wav(self, audio_path: str) -> str:
+        """
+        Convert audio file to mono WAV format (16kHz) required by Vosk.
+        
+        Uses ffmpeg to convert any audio format to the required format.
+        
+        Args:
+            audio_path: Path to the input audio file
+            
+        Returns:
+            Path to the converted WAV file (temporary file)
+            
+        Raises:
+            TranscriptionError: If conversion fails
+        """
+        try:
+            # Create temporary WAV file
+            temp_wav = tempfile.NamedTemporaryFile(suffix='.wav', delete=False)
+            temp_wav.close()
+            
+            # Use ffmpeg to convert to mono WAV at 16kHz
+            # -i: input file
+            # -ar 16000: set sample rate to 16kHz
+            # -ac 1: set to mono (1 channel)
+            # -y: overwrite output file
+            cmd = [
+                'ffmpeg',
+                '-i', audio_path,
+                '-ar', '16000',
+                '-ac', '1',
+                '-y',
+                temp_wav.name
+            ]
+            
+            # Run ffmpeg (suppress output)
+            result = subprocess.run(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=True
+            )
+            
+            return temp_wav.name
+            
+        except subprocess.CalledProcessError as e:
+            # Clean up temp file on error
+            if os.path.exists(temp_wav.name):
+                os.unlink(temp_wav.name)
+            raise TranscriptionError(
+                f"Failed to convert audio file: {audio_path}\n"
+                f"ffmpeg error: {e.stderr.decode('utf-8', errors='ignore')}"
+            )
+        except Exception as e:
+            # Clean up temp file on error
+            if 'temp_wav' in locals() and os.path.exists(temp_wav.name):
+                os.unlink(temp_wav.name)
+            raise TranscriptionError(
+                f"Failed to convert audio file: {audio_path}. Error: {str(e)}"
+            )
     
     def transcribe(self, audio_path: str) -> str:
         """
         Transcribe an audio file to text.
         
+        Automatically converts the audio to the required format if needed.
+        
         Args:
-            audio_path: Path to the audio file
+            audio_path: Path to the audio file (any supported format)
             
         Returns:
             Transcribed text as a single string
@@ -103,14 +165,84 @@ class AudioTranscriber:
             UnsupportedFormatError: If the audio format is not supported
             TranscriptionError: If transcription fails
         """
-        return self.backend.transcribe(audio_path)
+        path = Path(audio_path)
+        
+        # Check if file exists
+        if not path.exists():
+            raise FileNotFoundError(f"Audio file not found: {audio_path}")
+        
+        # Check if format is supported
+        if path.suffix.lower() not in self.SUPPORTED_FORMATS:
+            raise UnsupportedFormatError(
+                f"Unsupported audio format: {path.suffix}. "
+                f"Supported formats: {', '.join(sorted(self.SUPPORTED_FORMATS))}"
+            )
+        
+        temp_wav_path = None
+        try:
+            # Convert to WAV if needed
+            if path.suffix.lower() != '.wav':
+                temp_wav_path = self._convert_to_wav(str(path))
+                wav_path = temp_wav_path
+            else:
+                # Check if WAV is already in correct format
+                with wave.open(str(path), "rb") as wf:
+                    if wf.getnchannels() != 1 or wf.getframerate() != 16000:
+                        # Need to convert
+                        temp_wav_path = self._convert_to_wav(str(path))
+                        wav_path = temp_wav_path
+                    else:
+                        wav_path = str(path)
+            
+            # Transcribe the WAV file
+            wf = wave.open(wav_path, "rb")
+            
+            # Create recognizer
+            rec = KaldiRecognizer(self.model, wf.getframerate())
+            rec.SetWords(False)
+            
+            # Process audio
+            full_text = []
+            while True:
+                data = wf.readframes(4000)
+                if len(data) == 0:
+                    break
+                if rec.AcceptWaveform(data):
+                    result = json.loads(rec.Result())
+                    if 'text' in result and result['text']:
+                        full_text.append(result['text'])
+            
+            # Get final result
+            final_result = json.loads(rec.FinalResult())
+            if 'text' in final_result and final_result['text']:
+                full_text.append(final_result['text'])
+            
+            wf.close()
+            
+            return ' '.join(full_text).strip()
+            
+        except (TranscriptionError, FileNotFoundError, UnsupportedFormatError):
+            raise
+        except Exception as e:
+            raise TranscriptionError(
+                f"Failed to transcribe audio file: {audio_path}. Error: {str(e)}"
+            )
+        finally:
+            # Clean up temporary file
+            if temp_wav_path and os.path.exists(temp_wav_path):
+                try:
+                    os.unlink(temp_wav_path)
+                except:
+                    pass  # Ignore cleanup errors
     
     def transcribe_with_timestamps(self, audio_path: str) -> List[Dict]:
         """
         Transcribe an audio file with timestamps for each segment.
         
+        Automatically converts the audio to the required format if needed.
+        
         Args:
-            audio_path: Path to the audio file
+            audio_path: Path to the audio file (any supported format)
             
         Returns:
             List of dictionaries, each containing:
@@ -123,4 +255,86 @@ class AudioTranscriber:
             UnsupportedFormatError: If the audio format is not supported
             TranscriptionError: If transcription fails
         """
-        return self.backend.transcribe_with_timestamps(audio_path)
+        path = Path(audio_path)
+        
+        # Check if file exists
+        if not path.exists():
+            raise FileNotFoundError(f"Audio file not found: {audio_path}")
+        
+        # Check if format is supported
+        if path.suffix.lower() not in self.SUPPORTED_FORMATS:
+            raise UnsupportedFormatError(
+                f"Unsupported audio format: {path.suffix}. "
+                f"Supported formats: {', '.join(sorted(self.SUPPORTED_FORMATS))}"
+            )
+        
+        temp_wav_path = None
+        try:
+            # Convert to WAV if needed
+            if path.suffix.lower() != '.wav':
+                temp_wav_path = self._convert_to_wav(str(path))
+                wav_path = temp_wav_path
+            else:
+                # Check if WAV is already in correct format
+                with wave.open(str(path), "rb") as wf:
+                    if wf.getnchannels() != 1 or wf.getframerate() != 16000:
+                        # Need to convert
+                        temp_wav_path = self._convert_to_wav(str(path))
+                        wav_path = temp_wav_path
+                    else:
+                        wav_path = str(path)
+            
+            # Transcribe the WAV file
+            wf = wave.open(wav_path, "rb")
+            
+            # Create recognizer with word timestamps
+            rec = KaldiRecognizer(self.model, wf.getframerate())
+            rec.SetWords(True)
+            
+            # Process audio
+            segments = []
+            while True:
+                data = wf.readframes(4000)
+                if len(data) == 0:
+                    break
+                if rec.AcceptWaveform(data):
+                    result = json.loads(rec.Result())
+                    if 'result' in result and result['result']:
+                        words = result['result']
+                        if words:
+                            segment_text = ' '.join([w['word'] for w in words])
+                            segments.append({
+                                'start': words[0]['start'],
+                                'end': words[-1]['end'],
+                                'text': segment_text
+                            })
+            
+            # Get final result
+            final_result = json.loads(rec.FinalResult())
+            if 'result' in final_result and final_result['result']:
+                words = final_result['result']
+                if words:
+                    segment_text = ' '.join([w['word'] for w in words])
+                    segments.append({
+                        'start': words[0]['start'],
+                        'end': words[-1]['end'],
+                        'text': segment_text
+                    })
+            
+            wf.close()
+            
+            return segments
+            
+        except (TranscriptionError, FileNotFoundError, UnsupportedFormatError):
+            raise
+        except Exception as e:
+            raise TranscriptionError(
+                f"Failed to transcribe audio file: {audio_path}. Error: {str(e)}"
+            )
+        finally:
+            # Clean up temporary file
+            if temp_wav_path and os.path.exists(temp_wav_path):
+                try:
+                    os.unlink(temp_wav_path)
+                except:
+                    pass  # Ignore cleanup errors

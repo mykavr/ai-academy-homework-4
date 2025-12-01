@@ -4,7 +4,7 @@ from .pdf_loader import PDFLoader, PDFProcessingError
 from .audio_transcriber import AudioTranscriber, TranscriptionError, UnsupportedFormatError
 
 __all__ = [
-    'PDFLoader', 
+    'PDFLoader',
     'PDFProcessingError',
     'AudioTranscriber',
     'TranscriptionError',

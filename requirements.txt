@@ -2,9 +2,11 @@
 pdfplumber==0.11.0
 
 # Audio/Video Processing
-openai-whisper==20231117  # Optional: requires Python < 3.14
-vosk==0.3.45  # Recommended for Python 3.14+
+vosk==0.3.45  # Speech recognition
 moviepy==1.0.3
+
+# Note: ffmpeg is required for audio format conversion
+# Install separately: https://ffmpeg.org/download.html
 
 # Text Processing and Chunking
 langchain-text-splitters==0.2.2
