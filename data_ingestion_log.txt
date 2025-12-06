@@ -1,0 +1,259 @@
+C:\IT\Training\AI_Academy\HW6>python main.py ingest "data\pdf\1 part. RAG Intro.pdf"
+C:\Users\Mik\AppData\Roaming\Python\Python314\site-packages\openai\_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.typing import (
+🚀 Initializing RAG Chatbot...
+2025-12-06 16:12:15,868 - src.rag.chatbot - INFO - RAG Chatbot initialized with lazy loading
+✅ Chatbot initialized successfully
+
+📄 Detected file type: pdf
+📥 Ingesting pdf file: data\pdf\1 part. RAG Intro.pdf
+⏳ Processing... (this may take a while)
+2025-12-06 16:12:15,875 - src.rag.chatbot - INFO - Ingesting PDF: data\pdf\1 part. RAG Intro.pdf
+2025-12-06 16:12:15,875 - src.rag.chatbot - INFO - Initializing PDF loader...
+2025-12-06 16:12:15,906 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:12:15,923 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:12:15,939 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:12:15,943 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:12:17,798 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:12:18,742 - src.rag.chatbot - INFO - Initializing text chunker...
+2025-12-06 16:12:20,282 - src.rag.chatbot - INFO - Initializing embedding model...
+2025-12-06 16:12:20,286 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-12-06 16:12:20,286 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-mpnet-base-v2
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:10<00:00, 10.53s/it]
+2025-12-06 16:12:33,587 - src.rag.chatbot - INFO - Initializing vector store...
+2025-12-06 16:12:33,614 - src.storage.vector_store - INFO - Using existing collection 'documents'
+2025-12-06 16:12:33,614 - src.storage.vector_store - INFO - Initialized VectorStore with persistent storage
+2025-12-06 16:12:33,679 - src.storage.vector_store - INFO - Successfully added 10 documents to vector store
+2025-12-06 16:12:33,680 - src.rag.chatbot - INFO - Successfully ingested PDF: data\pdf\1 part. RAG Intro.pdf (10 chunks)
+✅ Successfully ingested: data\pdf\1 part. RAG Intro.pdf
+📊 Added 10 chunks to knowledge base
+2025-12-06 16:12:33,683 - src.rag.chatbot - INFO - Closing RAG Chatbot...
+2025-12-06 16:12:33,684 - src.rag.chatbot - INFO - RAG Chatbot closed
+
+C:\IT\Training\AI_Academy\HW6>python main.py ingest "data\pdf\1st Part_Productized Enterprise RAG.pdf"
+C:\Users\Mik\AppData\Roaming\Python\Python314\site-packages\openai\_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.typing import (
+🚀 Initializing RAG Chatbot...
+2025-12-06 16:13:03,607 - src.rag.chatbot - INFO - RAG Chatbot initialized with lazy loading
+✅ Chatbot initialized successfully
+
+📄 Detected file type: pdf
+📥 Ingesting pdf file: data\pdf\1st Part_Productized Enterprise RAG.pdf
+⏳ Processing... (this may take a while)
+2025-12-06 16:13:03,614 - src.rag.chatbot - INFO - Ingesting PDF: data\pdf\1st Part_Productized Enterprise RAG.pdf
+2025-12-06 16:13:03,616 - src.rag.chatbot - INFO - Initializing PDF loader...
+2025-12-06 16:13:03,640 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:13:03,643 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:13:03,652 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:13:03,665 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:13:03,667 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:13:04,780 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:13:05,704 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:13:07,144 - src.rag.chatbot - INFO - Initializing text chunker...
+2025-12-06 16:13:08,476 - src.rag.chatbot - INFO - Initializing embedding model...
+2025-12-06 16:13:08,481 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-12-06 16:13:08,482 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-mpnet-base-v2
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:12<00:00, 12.26s/it]
+2025-12-06 16:13:23,347 - src.rag.chatbot - INFO - Initializing vector store...
+2025-12-06 16:13:23,371 - src.storage.vector_store - INFO - Using existing collection 'documents'
+2025-12-06 16:13:23,371 - src.storage.vector_store - INFO - Initialized VectorStore with persistent storage
+2025-12-06 16:13:23,475 - src.storage.vector_store - INFO - Successfully added 15 documents to vector store
+2025-12-06 16:13:23,476 - src.rag.chatbot - INFO - Successfully ingested PDF: data\pdf\1st Part_Productized Enterprise RAG.pdf (15 chunks)
+✅ Successfully ingested: data\pdf\1st Part_Productized Enterprise RAG.pdf
+📊 Added 15 chunks to knowledge base
+2025-12-06 16:13:23,482 - src.rag.chatbot - INFO - Closing RAG Chatbot...
+2025-12-06 16:13:23,483 - src.rag.chatbot - INFO - RAG Chatbot closed
+
+C:\IT\Training\AI_Academy\HW6>python main.py ingest "data\pdf\2 part Databases for GenAI.pdf"
+C:\Users\Mik\AppData\Roaming\Python\Python314\site-packages\openai\_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.typing import (
+🚀 Initializing RAG Chatbot...
+2025-12-06 16:13:47,433 - src.rag.chatbot - INFO - RAG Chatbot initialized with lazy loading
+✅ Chatbot initialized successfully
+
+📄 Detected file type: pdf
+📥 Ingesting pdf file: data\pdf\2 part Databases for GenAI.pdf
+⏳ Processing... (this may take a while)
+2025-12-06 16:13:47,438 - src.rag.chatbot - INFO - Ingesting PDF: data\pdf\2 part Databases for GenAI.pdf
+2025-12-06 16:13:47,438 - src.rag.chatbot - INFO - Initializing PDF loader...
+2025-12-06 16:13:51,333 - src.rag.chatbot - INFO - Initializing text chunker...
+2025-12-06 16:13:52,827 - src.rag.chatbot - INFO - Initializing embedding model...
+2025-12-06 16:13:52,831 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-12-06 16:13:52,832 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-mpnet-base-v2
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:12<00:00, 12.14s/it]
+2025-12-06 16:14:07,791 - src.rag.chatbot - INFO - Initializing vector store...
+2025-12-06 16:14:07,831 - src.storage.vector_store - INFO - Using existing collection 'documents'
+2025-12-06 16:14:07,832 - src.storage.vector_store - INFO - Initialized VectorStore with persistent storage
+2025-12-06 16:14:07,928 - src.storage.vector_store - INFO - Successfully added 12 documents to vector store
+2025-12-06 16:14:07,929 - src.rag.chatbot - INFO - Successfully ingested PDF: data\pdf\2 part Databases for GenAI.pdf (12 chunks)
+✅ Successfully ingested: data\pdf\2 part Databases for GenAI.pdf
+📊 Added 12 chunks to knowledge base
+2025-12-06 16:14:07,933 - src.rag.chatbot - INFO - Closing RAG Chatbot...
+2025-12-06 16:14:07,934 - src.rag.chatbot - INFO - RAG Chatbot closed
+
+C:\IT\Training\AI_Academy\HW6>python main.py ingest "data\pdf\2nd Part_Architecture & Design Patterns.pdf"
+C:\Users\Mik\AppData\Roaming\Python\Python314\site-packages\openai\_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.typing import (
+🚀 Initializing RAG Chatbot...
+2025-12-06 16:14:38,289 - src.rag.chatbot - INFO - RAG Chatbot initialized with lazy loading
+✅ Chatbot initialized successfully
+
+📄 Detected file type: pdf
+📥 Ingesting pdf file: data\pdf\2nd Part_Architecture & Design Patterns.pdf
+⏳ Processing... (this may take a while)
+2025-12-06 16:14:38,294 - src.rag.chatbot - INFO - Ingesting PDF: data\pdf\2nd Part_Architecture & Design Patterns.pdf
+2025-12-06 16:14:38,295 - src.rag.chatbot - INFO - Initializing PDF loader...
+2025-12-06 16:14:38,316 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:38,319 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:38,331 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:38,343 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:38,352 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:38,365 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:38,368 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:38,372 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:38,683 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:39,047 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:39,365 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:39,372 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:40,238 - pdfminer.pdffont - WARNING - Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+2025-12-06 16:14:40,850 - src.rag.chatbot - INFO - Initializing text chunker...
+2025-12-06 16:14:42,145 - src.rag.chatbot - INFO - Initializing embedding model...
+2025-12-06 16:14:42,150 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-12-06 16:14:42,150 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-mpnet-base-v2
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:07<00:00,  7.77s/it]
+2025-12-06 16:14:52,493 - src.rag.chatbot - INFO - Initializing vector store...
+2025-12-06 16:14:52,528 - src.storage.vector_store - INFO - Using existing collection 'documents'
+2025-12-06 16:14:52,528 - src.storage.vector_store - INFO - Initialized VectorStore with persistent storage
+2025-12-06 16:14:52,598 - src.storage.vector_store - INFO - Successfully added 9 documents to vector store
+2025-12-06 16:14:52,598 - src.rag.chatbot - INFO - Successfully ingested PDF: data\pdf\2nd Part_Architecture & Design Patterns.pdf (9 chunks)
+✅ Successfully ingested: data\pdf\2nd Part_Architecture & Design Patterns.pdf
+📊 Added 9 chunks to knowledge base
+2025-12-06 16:14:52,601 - src.rag.chatbot - INFO - Closing RAG Chatbot...
+2025-12-06 16:14:52,603 - src.rag.chatbot - INFO - RAG Chatbot closed
+
+C:\IT\Training\AI_Academy\HW6>python main.py ingest "data\pdf\Architecture & Design Patterns.pdf"
+C:\Users\Mik\AppData\Roaming\Python\Python314\site-packages\openai\_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.typing import (
+🚀 Initializing RAG Chatbot...
+2025-12-06 16:15:17,530 - src.rag.chatbot - INFO - RAG Chatbot initialized with lazy loading
+✅ Chatbot initialized successfully
+
+📄 Detected file type: pdf
+📥 Ingesting pdf file: data\pdf\Architecture & Design Patterns.pdf
+⏳ Processing... (this may take a while)
+2025-12-06 16:15:17,535 - src.rag.chatbot - INFO - Ingesting PDF: data\pdf\Architecture & Design Patterns.pdf
+2025-12-06 16:15:17,536 - src.rag.chatbot - INFO - Initializing PDF loader...
+2025-12-06 16:15:17,919 - src.rag.chatbot - INFO - Initializing text chunker...
+2025-12-06 16:15:19,439 - src.rag.chatbot - INFO - Initializing embedding model...
+2025-12-06 16:15:19,444 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-12-06 16:15:19,444 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-mpnet-base-v2
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  1.00it/s]
+2025-12-06 16:15:23,323 - src.rag.chatbot - INFO - Initializing vector store...
+2025-12-06 16:15:23,361 - src.storage.vector_store - INFO - Using existing collection 'documents'
+2025-12-06 16:15:23,361 - src.storage.vector_store - INFO - Initialized VectorStore with persistent storage
+2025-12-06 16:15:23,371 - src.storage.vector_store - INFO - Successfully added 1 documents to vector store
+2025-12-06 16:15:23,372 - src.rag.chatbot - INFO - Successfully ingested PDF: data\pdf\Architecture & Design Patterns.pdf (1 chunks)
+✅ Successfully ingested: data\pdf\Architecture & Design Patterns.pdf
+📊 Added 1 chunks to knowledge base
+2025-12-06 16:15:23,374 - src.rag.chatbot - INFO - Closing RAG Chatbot...
+2025-12-06 16:15:23,375 - src.rag.chatbot - INFO - RAG Chatbot closed
+
+C:\IT\Training\AI_Academy\HW6>python main.py ingest "data\pdf\Databases for GenAI.pdf"
+C:\Users\Mik\AppData\Roaming\Python\Python314\site-packages\openai\_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.typing import (
+🚀 Initializing RAG Chatbot...
+2025-12-06 16:15:54,607 - src.rag.chatbot - INFO - RAG Chatbot initialized with lazy loading
+✅ Chatbot initialized successfully
+
+📄 Detected file type: pdf
+📥 Ingesting pdf file: data\pdf\Databases for GenAI.pdf
+⏳ Processing... (this may take a while)
+2025-12-06 16:15:54,614 - src.rag.chatbot - INFO - Ingesting PDF: data\pdf\Databases for GenAI.pdf
+2025-12-06 16:15:54,615 - src.rag.chatbot - INFO - Initializing PDF loader...
+2025-12-06 16:15:55,442 - src.rag.chatbot - INFO - Initializing text chunker...
+2025-12-06 16:15:56,888 - src.rag.chatbot - INFO - Initializing embedding model...
+2025-12-06 16:15:56,893 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-12-06 16:15:56,893 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-mpnet-base-v2
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:06<00:00,  6.65s/it]
+2025-12-06 16:16:06,313 - src.rag.chatbot - INFO - Initializing vector store...
+2025-12-06 16:16:06,355 - src.storage.vector_store - INFO - Using existing collection 'documents'
+2025-12-06 16:16:06,356 - src.storage.vector_store - INFO - Initialized VectorStore with persistent storage
+2025-12-06 16:16:06,388 - src.storage.vector_store - INFO - Successfully added 4 documents to vector store
+2025-12-06 16:16:06,388 - src.rag.chatbot - INFO - Successfully ingested PDF: data\pdf\Databases for GenAI.pdf (4 chunks)
+✅ Successfully ingested: data\pdf\Databases for GenAI.pdf
+📊 Added 4 chunks to knowledge base
+2025-12-06 16:16:06,392 - src.rag.chatbot - INFO - Closing RAG Chatbot...
+2025-12-06 16:16:06,393 - src.rag.chatbot - INFO - RAG Chatbot closed
+
+C:\IT\Training\AI_Academy\HW6>python main.py ingest "data\pdf\Productized & Enterprise RAG.pdf"
+C:\Users\Mik\AppData\Roaming\Python\Python314\site-packages\openai\_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.typing import (
+🚀 Initializing RAG Chatbot...
+2025-12-06 16:16:34,895 - src.rag.chatbot - INFO - RAG Chatbot initialized with lazy loading
+✅ Chatbot initialized successfully
+
+📄 Detected file type: pdf
+📥 Ingesting pdf file: data\pdf\Productized & Enterprise RAG.pdf
+⏳ Processing... (this may take a while)
+2025-12-06 16:16:34,900 - src.rag.chatbot - INFO - Ingesting PDF: data\pdf\Productized & Enterprise RAG.pdf
+2025-12-06 16:16:34,901 - src.rag.chatbot - INFO - Initializing PDF loader...
+2025-12-06 16:16:35,663 - src.rag.chatbot - INFO - Initializing text chunker...
+2025-12-06 16:16:37,013 - src.rag.chatbot - INFO - Initializing embedding model...
+2025-12-06 16:16:37,019 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-12-06 16:16:37,019 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-mpnet-base-v2
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:02<00:00,  2.79s/it]
+2025-12-06 16:16:42,516 - src.rag.chatbot - INFO - Initializing vector store...
+2025-12-06 16:16:42,554 - src.storage.vector_store - INFO - Using existing collection 'documents'
+2025-12-06 16:16:42,554 - src.storage.vector_store - INFO - Initialized VectorStore with persistent storage
+2025-12-06 16:16:42,577 - src.storage.vector_store - INFO - Successfully added 3 documents to vector store
+2025-12-06 16:16:42,578 - src.rag.chatbot - INFO - Successfully ingested PDF: data\pdf\Productized & Enterprise RAG.pdf (3 chunks)
+✅ Successfully ingested: data\pdf\Productized & Enterprise RAG.pdf
+📊 Added 3 chunks to knowledge base
+2025-12-06 16:16:42,582 - src.rag.chatbot - INFO - Closing RAG Chatbot...
+2025-12-06 16:16:42,583 - src.rag.chatbot - INFO - RAG Chatbot closed
+
+C:\IT\Training\AI_Academy\HW6>python main.py ingest "data\pdf\RAG Intro.pdf"
+C:\Users\Mik\AppData\Roaming\Python\Python314\site-packages\openai\_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.typing import (
+🚀 Initializing RAG Chatbot...
+2025-12-06 16:17:10,951 - src.rag.chatbot - INFO - RAG Chatbot initialized with lazy loading
+✅ Chatbot initialized successfully
+
+📄 Detected file type: pdf
+📥 Ingesting pdf file: data\pdf\RAG Intro.pdf
+⏳ Processing... (this may take a while)
+2025-12-06 16:17:10,956 - src.rag.chatbot - INFO - Ingesting PDF: data\pdf\RAG Intro.pdf
+2025-12-06 16:17:10,957 - src.rag.chatbot - INFO - Initializing PDF loader...
+2025-12-06 16:17:11,704 - src.rag.chatbot - INFO - Initializing text chunker...
+2025-12-06 16:17:12,953 - src.rag.chatbot - INFO - Initializing embedding model...
+2025-12-06 16:17:12,957 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-12-06 16:17:12,958 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-mpnet-base-v2
+Batches: 100%|███████████████████████████████████████████████████████████████████████████| 1/1 [00:02<00:00,  2.91s/it]
+2025-12-06 16:17:18,480 - src.rag.chatbot - INFO - Initializing vector store...
+2025-12-06 16:17:18,510 - src.storage.vector_store - INFO - Using existing collection 'documents'
+2025-12-06 16:17:18,510 - src.storage.vector_store - INFO - Initialized VectorStore with persistent storage
+2025-12-06 16:17:18,534 - src.storage.vector_store - INFO - Successfully added 3 documents to vector store
+2025-12-06 16:17:18,534 - src.rag.chatbot - INFO - Successfully ingested PDF: data\pdf\RAG Intro.pdf (3 chunks)
+✅ Successfully ingested: data\pdf\RAG Intro.pdf
+📊 Added 3 chunks to knowledge base
+2025-12-06 16:17:18,536 - src.rag.chatbot - INFO - Closing RAG Chatbot...
+2025-12-06 16:17:18,537 - src.rag.chatbot - INFO - RAG Chatbot closed
+
+C:\IT\Training\AI_Academy\HW6>python main.py stats
+C:\Users\Mik\AppData\Roaming\Python\Python314\site-packages\openai\_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.typing import (
+🚀 Initializing RAG Chatbot...
+2025-12-06 16:17:42,738 - src.rag.chatbot - INFO - RAG Chatbot initialized with lazy loading
+✅ Chatbot initialized successfully
+
+2025-12-06 16:17:42,741 - src.rag.chatbot - INFO - Initializing vector store...
+2025-12-06 16:17:42,790 - src.storage.vector_store - INFO - Using existing collection 'documents'
+2025-12-06 16:17:42,790 - src.storage.vector_store - INFO - Initialized VectorStore with persistent storage
+================================================================================
+📊 KNOWLEDGE BASE STATISTICS
+================================================================================
+Total chunks: 57
+Collection: documents
+================================================================================
+2025-12-06 16:17:42,798 - src.rag.chatbot - INFO - Closing RAG Chatbot...
+2025-12-06 16:17:42,799 - src.rag.chatbot - INFO - RAG Chatbot closed

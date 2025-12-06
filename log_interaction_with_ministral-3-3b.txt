@@ -1,0 +1,951 @@
+Microsoft Windows [Version 10.0.19045.6466]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\Mik>cd C:\IT\Training\AI_Academy\HW6
+
+C:\IT\Training\AI_Academy\HW6>python main.py interactive
+C:\Users\Mik\AppData\Roaming\Python\Python314\site-packages\openai\_compat.py:48: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.typing import (
+🚀 Initializing RAG Chatbot...
+2025-12-06 16:59:30,927 - src.rag.chatbot - INFO - RAG Chatbot initialized with lazy loading
+✅ Chatbot initialized successfully
+
+================================================================================
+🤖 RAG CHATBOT - Interactive Mode
+================================================================================
+Ask questions about your knowledge base.
+Commands:
+  - Type your question and press Enter
+  - Type 'stats' to see knowledge base statistics
+  - Type 'quit' or 'exit' to leave
+================================================================================
+
+You: What are the production 'Do's' for RAG?
+
+2025-12-06 16:59:33,651 - src.rag.chatbot - INFO - Processing question: What are the production 'Do's' for RAG?
+2025-12-06 16:59:33,652 - src.rag.chatbot - INFO - Initializing embedding model...
+2025-12-06 16:59:33,655 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-12-06 16:59:33,656 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-mpnet-base-v2
+Batches: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.10it/s]
+2025-12-06 16:59:37,286 - src.rag.chatbot - INFO - Initializing vector store...
+2025-12-06 16:59:37,321 - src.storage.vector_store - INFO - Using existing collection 'documents'
+2025-12-06 16:59:37,322 - src.storage.vector_store - INFO - Initialized VectorStore with persistent storage
+2025-12-06 16:59:37,327 - src.storage.vector_store - INFO - Query returned 5 results
+2025-12-06 16:59:37,328 - src.rag.chatbot - INFO - Initializing LLM interface...
+2025-12-06 16:59:38,033 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 16:59:38,033 - src.rag.llm_interface - INFO - LLM REQUEST
+2025-12-06 16:59:38,035 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 16:59:38,036 - src.rag.llm_interface - INFO - Model: local-model
+2025-12-06 16:59:38,036 - src.rag.llm_interface - INFO - Temperature: 0.7
+2025-12-06 16:59:38,037 - src.rag.llm_interface - INFO - Max tokens: 500
+2025-12-06 16:59:38,038 - src.rag.llm_interface - INFO - Messages:
+2025-12-06 16:59:38,039 - src.rag.llm_interface - INFO -   [0] Role: system
+2025-12-06 16:59:38,040 - src.rag.llm_interface - INFO -       Content: You are a helpful assistant answering questions about lecture content. Answer based on the context provided. If the context doesn't contain relevant information, say so clearly.
+2025-12-06 16:59:38,041 - src.rag.llm_interface - INFO -   [1] Role: user
+2025-12-06 16:59:38,041 - src.rag.llm_interface - INFO -       Content: Context:
+[Context 1]
+how you can leverage those products so you can do your daily work. Not necessarily limited to work,
+but you can also use that in your own private life. Then we will also discuss a bit about the pros, cons,
+and limitations.
+So today's session, the first part—the practitioner part—is mostly an overview of the current products
+that we have available so we can have the benefits of this new paradigm which is called RAG.
+Recap: What is RAG?
+Lecturer: First things first: a quick recap. In case you missed the previous sessions, or in case maybe
+something was not clear, just to provide a different perspective. I have two or three slides on what RAG
+is.
+Basically, RAG is just another software system that helps us crawl to some knowledge bases. How does
+it work? It basically starts with an initial prompt. Imagine we are asking a question. Traditionally, what
+we do with those questions is go to our database, find some data there, and then return an answer to
+that question. But more traditionally, the questions were addressed in a formal language, which we call,
+for instance, APIs, and those APIs have very clear specifications.
+The difference in the paradigm of GenAI is that we can address these prompts—these questions—in
+natural language, so in our mother tongue. But not only that; we don't only go and retrieve something
+from the knowledge base which is relevant to our question. More than that, we are initially augmenting
+that prompt—we are expanding it a bit—with some knowledge which is private. Usually, it's private; it's
+related to our organization or to our private life.
+Then we go with that question to a Large Language Model (LLM). The LLM analyzes our question
+together with the data that we retrieved here from the knowledge source and returns us an answer.
+Because the magic—the power of LLMs today—is that they can answer in our mother tongue as well.
+So we don't need that much formal, strict formats of questions or answers. We don't need necessarily
+to pass specific arguments to questions or APIs. We don't need necessarily to use JSON files and then
+retrieve a specific XML format which is further processed by another application. We don't need any of
+this. We just need our language to address the question to find something that's relevant there and
+
+[Context 2]
+Transcription: Productized & Enterprise RAG
+Source Video: 1st Part_Productized Enterprise RAG (1).mp4 Speaker: Lucian Gruia (Data Science
+Principal Lead, Ciklum) Date: October 2025 (as per slide context)
+Introduction & Logistics
+Lecturer: Welcome. To prepare the homeworks we are assigning here on these two chapters, of
+course, we needed to have some sessions before that about Large Language Models, about neural
+networks, and about GenAI introductions in general and fundamentals. So we can at least have the
+same terminology, start understanding the paradigm, and get more familiar with the new concepts.
+Today's session will be split into two parts. The first one is about "Productized and Enterprise RAG."
+Actually, we are mostly reviewing what the RAG platforms are and what are the available products that
+you can use. I will also do a quick recap on what RAG actually is.
+The second part of the session will be on the Architecture and Design Patterns. So after about 40
+minutes—we will see at the end of the first deck—you can switch. Some of you can drop; otherwise, if
+you are interested, you can still stay. But I just wanted to let you know that the second part of the
+session will be mostly focused on the engineering aspects. We are discussing coding and architecture
+parts. If you are interested, of course, feel free to stay; otherwise, feel free to drop.
+Meanwhile, my colleague Oksana is checking some settings in Zoom. I think there is a limitation where I
+cannot share the entire screen, and at some point, I will need to switch from Google Slides to show you
+some other screens. In case that doesn't work, it will take a while to do the switch. Maybe we can fix
+that meanwhile. Oksana, feel free to interrupt me anytime in case you find any other settings there
+which were not set up already.
+Session Agenda
+Lecturer: So, I know you had the intro session with Max on what Retrieval Augmented Generation
+(RAG) is. As I mentioned, I will do a quick recap. Then we will do a review on the existing products and
+how you can leverage those products so you can do your daily work. Not necessarily limited to work,
+but you can also use that in your own private life. Then we will also discuss a bit about the pros, cons,
+and limitations.
+So today's session, the first part—the practitioner part—is mostly an overview of the current products
+
+[Context 3]
+Host: Thank you. And the last one: Can I put RAG to my newly developed GPT and it will be very online
+and up to date? Is it it?
+Maksym: My newly developed GPT? Maybe person can unmute and just say few words what does it
+mean like newly developed GPT?
+Vasylii: Yes, so it's it's my question. So I just want to understand, do I get it right about RAGs? So if I
+have some LLM, whatever, GPT or whatever, and I want I don't want to retrain it, I just want a new
+information like from the new database. So it means that I can add this new shiny layer like RAG, as I
+understand it's like Chroma or whatever, and it will query the data from this Chroma before into the
+context window and just basically without retraining I will get all the all the information?
+Maksym: Yes. Yes. Nice. Then then then it's it's fully correct. In a simple understanding... maybe I just...
+[opens ChatGPT interface]. Just to show as a simple example of the RAG system as well. So when we
+create some projects for example in the ChatGPT, the project files that we are adding, basically that
+projects then our RAG system. Because ChatGPT just split that information to the chunks and then
+utilize that that information when we are asking questions in our chat. So this is like the simple
+representation of RAG system.
+And you can find all of that like GPTs... until you are providing the expected like behavior or instruction,
+when you just provide the the files that you wants GPTs to utilize, it will be in addition RAG system.
+
+[Context 4]
+Chunk overlap: 15% (~75 tokens).
+Top-k retrieval: I would say like 3-5, sometimes 10 chunks.
+Embedding dimensions: Between 768 and 1536 should be enough.
+This data mainly on the research of the NVIDIA and it's kind of like golden middle data and where you
+can start when you are building your RAG systems. But then within the evaluation and testing you can
+find your exact the best size for the chunks and for your RAG system.
+[26:35] Common Challenges
+Maksym: In terms of common challenges:
+Chunking and context window: As I mentioned about the problem with the chunking. If you
+providing quite large chunks, then it means that that quite large chunk then you feed to the model,
+so we have the problem with the additional not needed information in exact that request.
+Retrieval quality: It's based on the exact system that you utilize, I mean like vector database or
+approach to the data.
+Latency & cost: For sure if we add to any system that we are developing some additional layer
+where you need to retrieve data or make some filtering, it's coming with the cost of latency.
+[27:49] Do's and Don'ts for RAG
+Maksym: Some Do's and Don'ts for the RAG system:
+Start simple: Quite often it's better to start from the simple approach, even from the simple base.
+Start from simpler systems, not utilizing from the start the enterprise grade databases.
+Evaluate: And quite important part is evaluation of your RAG pipeline. Not only like building, but
+system that will help you to make the evaluation of the quality of your pipeline is quite important.
+Don't rely solely on vector search: To build like more reliable system, not rely solely on the
+vector search. In addition you still have like your standard searches like keyword.
+Hybrid Search: We will discuss about some of the other approaches that providing much better
+results when they work together as a hybrid approach and re-ranking approach as well.
+Security and Access Control: One of the biggest problem within the RAG this is the security and
+access control. So it's quite complex to implement this sometimes, but already some of the
+systems exist and we can just utilize them.
+Overload the LLM context: Working on the balance of your chunks. It shouldn't be quite big and
+for sure shouldn't be quite small because based on that your user of your system will get the
+result that it expected.
+
+[Context 5]
+or like bigger prompt you provided to the LLM, you are getting much worse result because LLM quite
+often missing the exact like needed information in the middle. And in addition, you just providing some
+noise together with that data, like some of the words or information that even not connected to your
+basically use case of the communication with LLM.
+[09:53] RAG Pipeline Deep Dive
+Maksym: When we are going to deep dive, so in the RAG pipeline in general we have two main stages.
+But when we go a bit to the details, quite often, and especially this information is missing when you
+reading about the RAG pipeline, it's data preparation for that RAG pipeline. Because mainly it focus
+on like the way of the chunking, what the database you can use and how you put the data. But it's
+quite important to start from the preparation of your data. Because I've mentioned, for example, when
+we provide huge amount of the data to the LLM, one of the big problem that together with that data
+you are providing like water or noise that just can navigate LLM when it use that prompt information or
+text in a wrong direction. So that's why quite often preparation of your data is quite important step as
+well.
+Then you have the step where you like preprocessing of the data, like making chunking process
+because you cannot just put whole your 100 page document to the vector database because it will be
+huge and then LLM basically will get all of that 100 page document as a prompt from the vector
+database. So we have like different approaches how to split the information that coming with the
+documents. And when we are talking about the documents, the information that coming as a input can
+be like in many different formats. We are focusing mainly on the text formats, but it can be audio, it can
+be video, it can be like images and different types like even JavaScript or Python code bases.
+Then we, after the step when we split our data to the smaller pieces, we are converting that smaller
+pieces to the numeric value. And then that numeric value basically ingest to the vector database.
+And we have step of the Retrieval. It's when already our user of our system basically make the
+request, and our system based on that request making the similarity search from the vector database.
+And based on the results of that similarity search, it's choosing like top-K chunks. Normally you are
+
+Question: What are the production 'Do's' for RAG?
+
+Answer based on the context provided above.
+2025-12-06 16:59:38,046 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:09:32,698 - httpx - INFO - HTTP Request: POST http://localhost:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-06 17:09:32,762 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:09:32,763 - src.rag.llm_interface - INFO - LLM RESPONSE
+2025-12-06 17:09:32,764 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:09:32,766 - src.rag.llm_interface - INFO - Answer: Based on the provided context, here are the **production-level "Do"s** (practical tips) for implementing a **RAG (Retrieval-Augmented Generation)** system:
+
+1. **Start Simple:**
+   Begin with basic RAG systems instead of immediately jumping to complex or enterprise-grade
+     architecture. Use straightforward solutions before optimizing.
+
+2. **Properly prepare data before processing it:**
+   Ensure thorough data preparation and ensure that the data you are ingesting into your RAG pipeline is relevant, properly structured, and free from excessive noise or irrelevant content. For example:
+   - Avoid feeding huge documents directly to vector databases without chunking.
+   - Remove unnecessary noise (irrelevant information) and focus on the core topic.
+
+3. **Evaluate Your System:**
+   Devote significant attention to testing and validating your RAG pipeline. Assess its performance
+     regularly using metrics relevant to your use case, such as accuracy, relevance, and precision,
+     especially by comparing its results against traditional methods or other hybrid approaches.
+     Experiment with different settings (e.g., chunk size, overlap, etc.).
+
+4. **Use Hybrid Retrieval Approaches:**
+   Don't rely solely on vector search. Integrate keyword-based search alongside your vector
+     retrieval mechanisms as a complementary approach. Then consider **re-ranking** of retrieved results
+     to improve the accuracy and relevance.
+
+5. **Optimize Chunking and Prompt Size (Context Window Balance):**
+   Use appropriate chunk sizes and overlap tokens (e.g., 10%–15%). Avoid excessive chunks, as they can increase latency and noise.
+   On the other hand, avoid overly small chunks, which might result in missing important context. The given range of **768 to 153 the embedding dimension** should be considered for optimal performance.
+
+6. Use a variety of chunking strategies to ensure proper and relevant data chunking:
+   Choose suitable methods (e.g., token-level splitting or window-based chunking) when converting
+     documents into smaller chunks, depending on your content type (text, code, etc.) and desired precision.
+
+7. Utilize high-quality, appropriately sized vector databases with the right embeddings.
+    According to context (NVIDIA research), **embedding dimensions of 768-1536 should suffice** to support meaningful similarity search across large document bases.
+
+These recommendations are based on the lecture context as an overview for
+2025-12-06 17:09:32,771 - src.rag.llm_interface - INFO - Finish reason: length
+2025-12-06 17:09:32,771 - src.rag.llm_interface - INFO - Model: mistralai/ministral-3-3b
+2025-12-06 17:09:32,772 - src.rag.llm_interface - INFO - Usage: CompletionUsage(completion_tokens=500, prompt_tokens=2561, total_tokens=3061)
+2025-12-06 17:09:32,773 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:09:32,775 - src.rag.chatbot - INFO - Successfully answered question with 5 context chunks
+Bot: Based on the provided context, here are the **production-level "Do"s** (practical tips) for implementing a **RAG (Retrieval-Augmented Generation)** system:
+
+1. **Start Simple:**
+   Begin with basic RAG systems instead of immediately jumping to complex or enterprise-grade
+     architecture. Use straightforward solutions before optimizing.
+
+2. **Properly prepare data before processing it:**
+   Ensure thorough data preparation and ensure that the data you are ingesting into your RAG pipeline is relevant, properly structured, and free from excessive noise or irrelevant content. For example:
+   - Avoid feeding huge documents directly to vector databases without chunking.
+   - Remove unnecessary noise (irrelevant information) and focus on the core topic.
+
+3. **Evaluate Your System:**
+   Devote significant attention to testing and validating your RAG pipeline. Assess its performance
+     regularly using metrics relevant to your use case, such as accuracy, relevance, and precision,
+     especially by comparing its results against traditional methods or other hybrid approaches.
+     Experiment with different settings (e.g., chunk size, overlap, etc.).
+
+4. **Use Hybrid Retrieval Approaches:**
+   Don't rely solely on vector search. Integrate keyword-based search alongside your vector
+     retrieval mechanisms as a complementary approach. Then consider **re-ranking** of retrieved results
+     to improve the accuracy and relevance.
+
+5. **Optimize Chunking and Prompt Size (Context Window Balance):**
+   Use appropriate chunk sizes and overlap tokens (e.g., 10%–15%). Avoid excessive chunks, as they can increase latency and noise.
+   On the other hand, avoid overly small chunks, which might result in missing important context. The given range of **768 to 153 the embedding dimension** should be considered for optimal performance.
+
+6. Use a variety of chunking strategies to ensure proper and relevant data chunking:
+   Choose suitable methods (e.g., token-level splitting or window-based chunking) when converting
+     documents into smaller chunks, depending on your content type (text, code, etc.) and desired precision.
+
+7. Utilize high-quality, appropriately sized vector databases with the right embeddings.
+    According to context (NVIDIA research), **embedding dimensions of 768-1536 should suffice** to support meaningful similarity search across large document bases.
+
+These recommendations are based on the lecture context as an overview for
+
+📚 Sources: 1st Part_Productized Enterprise RAG.pdf, 1 part. RAG Intro.pdf
+
+You: What is the difference between standard retrieval and the ColPali approach?
+
+2025-12-06 17:12:22,992 - src.rag.chatbot - INFO - Processing question: What is the difference between standard retrieval and the ColPali approach?
+Batches: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:01<00:00,  1.15s/it]
+2025-12-06 17:12:24,256 - src.storage.vector_store - INFO - Query returned 5 results
+2025-12-06 17:12:24,258 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:12:24,259 - src.rag.llm_interface - INFO - LLM REQUEST
+2025-12-06 17:12:24,260 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:12:24,261 - src.rag.llm_interface - INFO - Model: local-model
+2025-12-06 17:12:24,261 - src.rag.llm_interface - INFO - Temperature: 0.7
+2025-12-06 17:12:24,262 - src.rag.llm_interface - INFO - Max tokens: 500
+2025-12-06 17:12:24,263 - src.rag.llm_interface - INFO - Messages:
+2025-12-06 17:12:24,263 - src.rag.llm_interface - INFO -   [0] Role: system
+2025-12-06 17:12:24,264 - src.rag.llm_interface - INFO -       Content: You are a helpful assistant answering questions about lecture content. Answer based on the context provided. If the context doesn't contain relevant information, say so clearly.
+2025-12-06 17:12:24,266 - src.rag.llm_interface - INFO -   [1] Role: user
+2025-12-06 17:12:24,267 - src.rag.llm_interface - INFO -       Content: Context:
+[Context 1]
+self-correction.
+And when it's to use? When we have quite complex queries. And in cases if everything else
+that we discussed earlier failed and you need to have more higher accuracy. When we
+shouldn't use this? It's for the simple retrievals. And if our top quality attribute for our system
+is latency. Because you understand that this Agentic systems, when we have LLM and need to
+increase the quality of the results, the time of these types of the request is growing.
+Hybrid Search & Reranking
+Lecturer:
+I guess we will need maybe... Oksana, I guess our time is end.
+Moderator (Oksana):
+Yes, we are a bit out of time. If you have time you can continue. And also colleagues, if you
+have a little bit of ten minutes, we can continue this session.
+Lecturer:
+I will try to finish this like in five minutes and then we will have five minutes for the questions. I
+just will not stop quite deeply on each of the slide, just few words and what is the information
+important from that.
+In addition to increase the quality of our RAG systems—and why I mentioned earlier that you
+shouldn't rely only on the vector search—in addition, you can utilize best match search. This is
+what BM25. It doesn't have semantic understanding, but it calculates the number of words
+that it finds—like the same words that it find in the different documents—and can provide,
+based on that statistical calculation, what the documents we should pick up. And on the
+researches, when we have Hybrid System approach in terms of the search (Vector + this
+BM25), it increase accuracy for a bit more than 10 percentage. NDCG@3, this is like top three
+recalls basically. Top three candidates that we saw earlier on the diagram.
+And when we add the Reranker in addition, it's even increased to 37.2 percentage. Reranking,
+it's additional layer that we adding to the system. And we are grabbing from our vector
+system, or from our database, a bit more results. So we are grabbing instead of 5/10
+candidates, we are grabbing 100 candidates. And then our reranking system try to understand
+what is the best candidates for us and then provide as a result to the LLM like 5 or 10 or
+maybe 3 of them.
+Production Readiness: Do's and Don'ts
+Lecturer:
+
+[Context 2]
+And we have step of the Retrieval. It's when already our user of our system basically make the
+request, and our system based on that request making the similarity search from the vector database.
+And based on the results of that similarity search, it's choosing like top-K chunks. Normally you are
+setting that it's between like 5 to 10 top results that you are grabbing from that vector database. And
+then LLM decide what part of the information from that chunk it should pick up to fulfill the intent of
+the request of the user and provide the output.
+[13:46] Chunking Strategies
+Maksym: So chunking and approach to the chunking is quite important part of this all of the RAG
+system. Because context window of the LLMs it's limited for most of the LLMs. Right now for sure we
+have quite huge one even within the last Gemini versions, they mentioning that the context window can
+grow up to 2 million tokens. But still the problem with missing information in the middle still persist with
+huge context that you are providing to the model. Even right now the situation is improving and mainly
+labs working quite heavily to improve the retrieval and finding and processing of the whole of the
+information that you providing to the LLM. But still this is the problem of reliability so to say.
+And within the chunks, you have like challenges to get the proper balance. And if you split your
+document in a too large pieces, then you will have as a result like not the best retrieval or a lot of the
+noise or water that you are providing as a part of the request. Or if you putting it's too small, then you
+are losing basically the main context of that information because it can be splitted in a different parts.
+And it can be the case that based on the similarity search you will not get the full context of the
+information and LLM can provide not reliable response.
+Three Main Chunking Strategies:
+1. Fixed-Size: This is when we split our information basically in a fixed size, like for example 512
+tokens. And we are having like overlap, and overlap basically help us to potentially preserve some
+context from the previous chunk. It help us to increase the potential quality of the chunks that we
+will have. It is the simplest approach. It has cons, for example, if you always have a standard size,
+it can be the case that your chunk will break in a mid of the sentence or will not have still the main
+
+[Context 3]
+you are not only retrieving that important chunk of data, but you are actually looking forward and
+seeing: Where does that chunk come from? What's the document that comes from?
+If you don't have large documents—for instance, you have some Confluence pages which are limited to
+4-5 pages—searching through them might not give you relevant answers because they may have many
+ideas. So that's why you need to split them by concept. But then you still need to pass the whole
+context to the LLM.
+Lecturer: After you do the retrieval, you may want to do Re-ranking. Re-ranking is not done with the
+same mechanism that helped you retrieve from the database; it's done with another LLM. So you are
+basically asking for a second opinion: "Do you think this is really relevant to my question? Yes or not?"
+Or you can do Query Transformations. Instead of asking a simple question, you need to augment
+your question sometimes. Imagine the scenario where you are asking about "Ciklum". "Tell me what
+Ciklum does." And then after that, you come back with another question and say, "Now tell me what
+they do."
+The LLM (or the embedding model) will ask you, "What does 'they' mean?" It will look to the vector
+store and will not find anything relevant to "they". So that's why you need sometimes to transform your
+query. Every time you are asking the question, you go and augment your question by looking through
+the history. You understand that "they" is actually talking about "Ciklum".
+[13:25] Code Walkthrough and Architecture
+[Lecturer switches to IDE view]
+Lecturer: So, we have the API section here. The API part is basically how I am building the REST
+endpoints. We have chat , we have chunk data, we have add-to-qdrant (this is how we index and
+add to the vector store), and search-qdrant .
+Then we have the config file ( config.yaml ), which has multiple parameters. I built this in a way that
+we can play with multiple stuff here, such as:
+Enabling/Disabling history management.
+Changing the size of the history.
+Chunking Configuration: We have enable_variable: false and enable_semantic: true . We
+
+[Context 4]
+Character Recognition). So basically the ML system or it can be LLM that can look exactly on
+the PDF and then provide in the text view describe what it sees on the PDF. And then we can
+just vectorize it quite easily.
+Still we have issue with the tables quite often. And here like some OCR, again, can help, some
+other approaches, captions. So instead of using complex retrieval system and that relying on
+OCR—because they quite often failing with that—we can just use some embedding model
+that can understand what it see. So just embed the image.
+And one of the interesting approach to solve this question for the last time, it's quite new, let's
+say approach, it's ColPali library changes. So they, instead of using OCR just for the
+describing what information exist on the PDF and then vectorize that information, they have
+Vision Language Model for that. And image representation just split to the patches, and then
+that patches basically embed to the model. And when we have the retrieval, then we utilize
+that embedding model and still vision language model to give the answer what we have from
+that images. And this approach shows much better results in terms of RAG system retrieval of
+the information from the system. And it showed better result like 15 percentage approximately
+than standard retrieval system with the OCR that we have.
+So to answer on the question: quite often when we utilize the PDFs, when we have a PDFs as a
+documents, we utilize the OCR for describing of that documents and then we store the
+information. But this approach with the ColPali showing quite interesting results and maybe
+it's something that will be used much more often in the future as a part of this type of RAG
+systems. But still mostly OCR approach used.
+Agentic RAG
+Lecturer:
+And a bit about Agentic RAG. Because in AI right now everything changed to the Agentic RAG.
+And for sure this is quite interesting and quite reliable approach. So in the standard RAG we
+have query, and that query going to the embedding model, then we query the embedding
+vector databases, then vector databases provide to us candidates—like top candidates—and
+then our query (so our request) plus candidates that our vector database provided goes to
+the LLM. LLM then process all of that information that we put and then provide to our user the
+answer.
+
+[Context 5]
+RAG Intro Lecture Transcript
+Date: October 2025
+Topic: Retrieval-Augmented Generation (RAG)
+Speaker: Maksym Lypivskyi (Head of Cloud Platforms & AI Director, Ciklum)
+[00:00] Introduction
+Host: And as we are starting with the RAG topic, today we will have a small intro and then move on to
+the databases for GenAI. Our speaker for today's session is Maksym, and we will start with the intro as I
+said. Maksym, you are very welcome to start.
+[00:18] Lecture Start
+Maksym: Hello. Very happy to see you all today. I will start from organizational topics as well. It
+depends on how fast we will move; potentially we will have some small break between sessions, but
+let's see.
+So, today mainly we will focus exactly on the way how LLMs can utilize external information for
+providing value to the users that basically utilize some systems. And we will focus on RAG from a
+different perspective. First hour focus and first hour presentation will be around general RAG: why do
+we need RAG, and some more practical details that potentially will help you to navigate in this huge and
+complex world where you can find a lot of the tools for different purposes, a lot of the databases, but
+you don't know where to start and maybe where and how to progress.
+[01:43] Speaker Introduction
+Maksym: So let's start maybe a bit from the introduction. So I'm Max. Right now at Ciklum, I'm Global
+Head of Cloud Platforms and AI Director. So I'm already nine years within Ciklum. Long time ago I came
+here as a middle JavaScript engineer and went through the different stages of promotions, and I was
+so lucky to have experience with different SDLC processes and stages. That's why right now I can jump
+much deeper not only into engineering topics, into DevOps topics, Cloud topics, and in product topics
+as well.
+So from the start of the ChatGPT era, I jumped to the AI direction as a self-learner, and I was amazed
+with the sum of the experience that I got within the LLM. And right now my main interest is to make AI
+systems as much reliable as it's possible. That's why maybe you can find some of the topics that I did
+from the previous academies around prompt engineering. This is where I started to adopting LLM and
+tried to make them more reliable.
+
+Question: What is the difference between standard retrieval and the ColPali approach?
+
+Answer based on the context provided above.
+2025-12-06 17:12:24,274 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:21:31,963 - httpx - INFO - HTTP Request: POST http://localhost:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-06 17:21:31,969 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:21:31,970 - src.rag.llm_interface - INFO - LLM RESPONSE
+2025-12-06 17:21:31,973 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:21:31,975 - src.rag.llm_interface - INFO - Answer: Based on your context, here’s the key distinction between **standard vector search-based retrieval** and the **Colpalli/OCR + Patch-based Embedding approach**:
+
+1. **Standard Vector Search-Based Retrieval**:
+   - Relys on **OCR + text extraction** (from PDFs or documents) + vectorization.
+   - Uses **OCR to extract text** from images (including tables), which is then stored in the database for vector search.
+   - **Takes a "text-based" approach**: The system converts table data, graphs, etc., into raw text (often with errors due to OCR inaccuracies) before indexing and retrieving it.
+
+2. **ColPalli/OCR + Patch-Based Embedding Approach**:
+   **Uses a patch-based vision-language model (VLM)** rather than relying on OCR for text extraction from images (e.g., PDFs, tables, or figures).
+    - Extracts the image as-is or in patches and uses a VLM to generate relevant text descriptions directly from those images.
+    - Eliminates need for human- or OCR-generated text and extracts semantic information **without text errors** from images like tables, graphs, etc.
+    - This approach shows **stronger performance (≈15% better in terms of retrieval accuracy)** in RAG systems compared to standard vector search with OCR.
+
+### Context Summary:
+In the context, the lecturer highlights that the Colp a Patch-based approach **provides more accurate results than traditional text-to-text or OCR based retrievals**, because it leverages image-train models (like VLMs) directly instead of relying on OCR or extracted human-readable text from the PDF.
+
+This also suggests that for documents with rich visuals, VLM-based techniques like Colpalli may be preferred to avoid issues with context loss and noise when OCR is used.
+2025-12-06 17:21:31,978 - src.rag.llm_interface - INFO - Finish reason: stop
+2025-12-06 17:21:31,978 - src.rag.llm_interface - INFO - Model: mistralai/ministral-3-3b
+2025-12-06 17:21:31,979 - src.rag.llm_interface - INFO - Usage: CompletionUsage(completion_tokens=384, prompt_tokens=2713, total_tokens=3097)
+2025-12-06 17:21:31,980 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:21:31,981 - src.rag.chatbot - INFO - Successfully answered question with 5 context chunks
+Bot: Based on your context, here’s the key distinction between **standard vector search-based retrieval** and the **Colpalli/OCR + Patch-based Embedding approach**:
+
+1. **Standard Vector Search-Based Retrieval**:
+   - Relys on **OCR + text extraction** (from PDFs or documents) + vectorization.
+   - Uses **OCR to extract text** from images (including tables), which is then stored in the database for vector search.
+   - **Takes a "text-based" approach**: The system converts table data, graphs, etc., into raw text (often with errors due to OCR inaccuracies) before indexing and retrieving it.
+
+2. **ColPalli/OCR + Patch-Based Embedding Approach**:
+   **Uses a patch-based vision-language model (VLM)** rather than relying on OCR for text extraction from images (e.g., PDFs, tables, or figures).
+    - Extracts the image as-is or in patches and uses a VLM to generate relevant text descriptions directly from those images.
+    - Eliminates need for human- or OCR-generated text and extracts semantic information **without text errors** from images like tables, graphs, etc.
+    - This approach shows **stronger performance (≈15% better in terms of retrieval accuracy)** in RAG systems compared to standard vector search with OCR.
+
+### Context Summary:
+In the context, the lecturer highlights that the Colp a Patch-based approach **provides more accurate results than traditional text-to-text or OCR based retrievals**, because it leverages image-train models (like VLMs) directly instead of relying on OCR or extracted human-readable text from the PDF.
+
+This also suggests that for documents with rich visuals, VLM-based techniques like Colpalli may be preferred to avoid issues with context loss and noise when OCR is used.
+
+📚 Sources: 1 part. RAG Intro.pdf, 2 part Databases for GenAI.pdf, 2nd Part_Architecture & Design Patterns.pdf
+
+You: Why is hybrid search better than vector-only search?
+
+2025-12-06 17:22:19,823 - src.rag.chatbot - INFO - Processing question: Why is hybrid search better than vector-only search?
+Batches: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  7.79it/s]
+2025-12-06 17:22:19,963 - src.storage.vector_store - INFO - Query returned 5 results
+2025-12-06 17:22:19,964 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:22:19,964 - src.rag.llm_interface - INFO - LLM REQUEST
+2025-12-06 17:22:19,965 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:22:19,966 - src.rag.llm_interface - INFO - Model: local-model
+2025-12-06 17:22:19,967 - src.rag.llm_interface - INFO - Temperature: 0.7
+2025-12-06 17:22:19,968 - src.rag.llm_interface - INFO - Max tokens: 500
+2025-12-06 17:22:19,968 - src.rag.llm_interface - INFO - Messages:
+2025-12-06 17:22:19,969 - src.rag.llm_interface - INFO -   [0] Role: system
+2025-12-06 17:22:19,970 - src.rag.llm_interface - INFO -       Content: You are a helpful assistant answering questions about lecture content. Answer based on the context provided. If the context doesn't contain relevant information, say so clearly.
+2025-12-06 17:22:19,970 - src.rag.llm_interface - INFO -   [1] Role: user
+2025-12-06 17:22:19,971 - src.rag.llm_interface - INFO -       Content: Context:
+[Context 1]
+self-correction.
+And when it's to use? When we have quite complex queries. And in cases if everything else
+that we discussed earlier failed and you need to have more higher accuracy. When we
+shouldn't use this? It's for the simple retrievals. And if our top quality attribute for our system
+is latency. Because you understand that this Agentic systems, when we have LLM and need to
+increase the quality of the results, the time of these types of the request is growing.
+Hybrid Search & Reranking
+Lecturer:
+I guess we will need maybe... Oksana, I guess our time is end.
+Moderator (Oksana):
+Yes, we are a bit out of time. If you have time you can continue. And also colleagues, if you
+have a little bit of ten minutes, we can continue this session.
+Lecturer:
+I will try to finish this like in five minutes and then we will have five minutes for the questions. I
+just will not stop quite deeply on each of the slide, just few words and what is the information
+important from that.
+In addition to increase the quality of our RAG systems—and why I mentioned earlier that you
+shouldn't rely only on the vector search—in addition, you can utilize best match search. This is
+what BM25. It doesn't have semantic understanding, but it calculates the number of words
+that it finds—like the same words that it find in the different documents—and can provide,
+based on that statistical calculation, what the documents we should pick up. And on the
+researches, when we have Hybrid System approach in terms of the search (Vector + this
+BM25), it increase accuracy for a bit more than 10 percentage. NDCG@3, this is like top three
+recalls basically. Top three candidates that we saw earlier on the diagram.
+And when we add the Reranker in addition, it's even increased to 37.2 percentage. Reranking,
+it's additional layer that we adding to the system. And we are grabbing from our vector
+system, or from our database, a bit more results. So we are grabbing instead of 5/10
+candidates, we are grabbing 100 candidates. And then our reranking system try to understand
+what is the best candidates for us and then provide as a result to the LLM like 5 or 10 or
+maybe 3 of them.
+Production Readiness: Do's and Don'ts
+Lecturer:
+
+[Context 2]
+Similarity search → Top 100
+- Hybrid: 48.4 NDCG@3 (+10.5%) - Hybrid + Reranker: 1.9%
+Stage 2:
+- Hybrid + Reranker: 60.1 NDCG@3 - 67% reduction in retrieval failures
+Re-ranking pipeline → Top 5-10
+(+37.2%)
+✅ Use When: Queries span sources, complexity varies
+🆇 Don't Use: Latency-critical (<500ms SLA), simple retrieval
+1177
+Production readiness
+18
+Production Best Practices
+Do’s Don’ts
+✅ 1. Use Hybrid Search (vector + BM25) as 🆇 1. Vector-only search (use hybrid)
+baseline
+🆇 2. Ignore access controls (data leakage =
+✅ 2. Implement metadata filtering lawsuit)
+(security-critical)
+🆇 3. Overload context window (keep <50%)
+✅ filter = {"department": "finance",
+🆇 4. Skip evaluation frameworks (doesn't
+"access_level": user.role}
+scale)
+✅ 3. Monitor retrieval quality (recall@k,
+🆇 5. Neglect data freshness (stale = wrong
+NDCG)
+answers)
+✅ Tools: TruLens, LangSmith, DeepEval
+✅ 4. Keep embeddings fresh (re-index on
+doc changes)
+✅ 5. Evaluate systematically (not
+"vibes-based")
+19 19
+
+[Context 3]
+that "close and far," it's basically like vector databases when we set up like "choose top five
+results," providing to us with the answer from the five closest objects and then retransform
+this to the text. And we are basically getting that text that is most closest to the text from our
+request. In this case, like for the "machine learning," "ML algorithms" is quite close because
+the distance is 0.02. And if we just want to get only one top element, then we are getting "ML
+algorithms." "Pizza recipes" is quite far, so most probably the system will not suggest this to
+us.
+How Similarity Search Works
+Lecturer:
+And if we are going a bit deeper to the exact similarity search, how it works: So we have our
+documents—we already discussed about the RAG pipeline—so it's already transformed to the
+numerical representation from the embedding models, and it's stored somewhere here to the
+vector store. And we have three documents, and we fully indexed those documents, and it's
+stored.
+And when we have a search, and if we have a user query like "learn Python," then based on
+that documents that we stored, our system identifies the distance for our request. And in this
+case: "quite close," "somewhat close," and "far away." If we set up that we want to pick up two
+top results, so in this case, we will get "Python tutorial" and "Java programming" as well. And
+then LLM maybe make a decision to show only "Python tutorial." But it can be the case that it
+will provide as an output to the user both "Python tutorial" and "Java programming" because
+the quality of the LLM plays quite a significant role in this case as well.
+Quite often, similarity metrics that systems identify, this is: angle between the vectors, straight
+line (just distance between them), and in some cases, some dot multiplication in that systems.
+Embedding Quality Matters
+Lecturer:
+So, why does embedding quality matter? Because basically, it means how reliable the answer
+our user of our system will get. And right now, MTEB metrics—to be honest, I don't remember
+exactly this full abbreviation, but I provided the link to the leaderboard and you will see what
+exactly it means—this is the approach how currently embedding models are evaluated on the
+
+[Context 4]
+are moving to improving all of these tools and systems: the previous result was more than 200
+seconds. So the order of magnitude in terms of the speed increase for the vectorization is in
+10 times. So that system is much more improved. And we are going on that speed, and that
+changes with many models, systems, and tools in AI world because people experimenting,
+companies pouring a lot of effort in this race, so to say.
+Databases for Vectorization
+Lecturer:
+And if we will talk a bit more about the databases exactly for the vectorization... This is where I
+wanted to mention about the speed of changes as well. Because earlier I had this slide "Why
+we need to have separate database for embeddings" and that current databases systems,
+they have different algorithms, they don't have everything that is needed for the embeddings,
+they are quite slow for the embeddings. But Postgres is moving with their extension quite
+rapidly and catching up the speed question and especially amount of the
+operations—basically queries per second—that they can handle. And a lot of the researches
+already show that Postgres is quite a good alternative to the specialized, even, databases for
+the RAG.
+So you can see that, for example, faster than Pinecone, and for sure cheaper, and still open
+source. And for Qdrant, it can handle much more requests per second, but it's on a huge
+amount of the data. So they tested this on the 50 million embeddings. And this is where
+Qdrant starts degrading with the speed of working. So, potentially you can use just that
+database that you used to, and you just need to add additional extension for the embeddings
+and you can continue playing with your lovely Postgres.
+But still, we have the databases for the vectorization and they still play their own game. And
+for what systems they have the best results? And it was already mentioned about Chroma
+today. And Chroma is quite good when you are starting some of the prototyping. It's less rare
+used in some big production systems, but they already have their Cloud Chroma—I didn't
+try—and still they have some kind of limitations. So Chroma database quite good when you
+are starting and prototyping because it's quite easy to start. You just pip install Chroma and
+almost everything is working. So minimal configuration and you are starting almost
+
+[Context 5]
+you are not only retrieving that important chunk of data, but you are actually looking forward and
+seeing: Where does that chunk come from? What's the document that comes from?
+If you don't have large documents—for instance, you have some Confluence pages which are limited to
+4-5 pages—searching through them might not give you relevant answers because they may have many
+ideas. So that's why you need to split them by concept. But then you still need to pass the whole
+context to the LLM.
+Lecturer: After you do the retrieval, you may want to do Re-ranking. Re-ranking is not done with the
+same mechanism that helped you retrieve from the database; it's done with another LLM. So you are
+basically asking for a second opinion: "Do you think this is really relevant to my question? Yes or not?"
+Or you can do Query Transformations. Instead of asking a simple question, you need to augment
+your question sometimes. Imagine the scenario where you are asking about "Ciklum". "Tell me what
+Ciklum does." And then after that, you come back with another question and say, "Now tell me what
+they do."
+The LLM (or the embedding model) will ask you, "What does 'they' mean?" It will look to the vector
+store and will not find anything relevant to "they". So that's why you need sometimes to transform your
+query. Every time you are asking the question, you go and augment your question by looking through
+the history. You understand that "they" is actually talking about "Ciklum".
+[13:25] Code Walkthrough and Architecture
+[Lecturer switches to IDE view]
+Lecturer: So, we have the API section here. The API part is basically how I am building the REST
+endpoints. We have chat , we have chunk data, we have add-to-qdrant (this is how we index and
+add to the vector store), and search-qdrant .
+Then we have the config file ( config.yaml ), which has multiple parameters. I built this in a way that
+we can play with multiple stuff here, such as:
+Enabling/Disabling history management.
+Changing the size of the history.
+Chunking Configuration: We have enable_variable: false and enable_semantic: true . We
+
+Question: Why is hybrid search better than vector-only search?
+
+Answer based on the context provided above.
+2025-12-06 17:22:19,978 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:30:40,983 - httpx - INFO - HTTP Request: POST http://localhost:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-06 17:30:40,991 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:30:40,992 - src.rag.llm_interface - INFO - LLM RESPONSE
+2025-12-06 17:30:40,992 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:30:40,993 - src.rag.llm_interface - INFO - Answer: Based on your provided context:
+
+**Hybrid Search (vector + BM25) is better than Vector-Only Search because it improves recall accuracy without increasing latency too significantly.**
+
+The key points from your context are:
+1. **Vector-Only Search (from Context 1 and 3):**
+   - Provides the most relevant results based on the **semantic similarity** of vector embeddings.
+   - Can be accurate but limited to semantic understanding.
+   **Limited benefit in recall:** It does not rely on keyword-level matching, so it may miss some relevant documents that contain non-sematically close terms but different content.
+
+2. **BM25-based retrieval (from Context 1 and the Hybrid section in Contexts):**
+   - The *statistical statistical* BM25 algorithm is used as a second layer to capture additional relevant results from the vector store’s top candidates by doing **term matching**, even though it lacks semantic understanding.
+   **Limited benefit alone:** Without a reranking layer, its accuracy improves by only about **+10.5%** (based on *NDCG@3* metric in Context 2).
+
+3. **Adding Reranking Layer (Contexts 2 and 3):**
+   - The reranker (a secondary LLM) helps refine the results using additional semantic context, increasing accuracy to **~37.2% higher** than hybrid search alone.
+   - This layer improves precision (ranking more relevant results) by considering **contextual relevance from the LLM itself**.
+
+So, when BM25 is combined with vector search, it effectively addresses:
+- **Cheshan** in **Context 1: Hybrids search system**—this is not just a feature but a *process of combining* two techniques, one semantic (vector) and one statistical (BM25).
+   The context is about the hybrid approach and its accuracy improvement but does not explain the exact reasons for why it works better.
+
+- **Why is it better than vector-only search?**
+   Vector only systems are good at identifying documents that closely match the *semantic intent* of your query (e.g., "machine learning" or "ML algorithms").
+   But BM25 provides a **term-based retrieval** layer which captures additional relevant candidates the LLM might miss. This helps avoid the situation where the vector search picks more distant and irrelevant matches, while the reranking layer prioritizes better ones.
+
+
+2025-12-06 17:30:40,997 - src.rag.llm_interface - INFO - Finish reason: length
+2025-12-06 17:30:40,998 - src.rag.llm_interface - INFO - Model: mistralai/ministral-3-3b
+2025-12-06 17:30:40,999 - src.rag.llm_interface - INFO - Usage: CompletionUsage(completion_tokens=500, prompt_tokens=2511, total_tokens=3011)
+2025-12-06 17:30:41,001 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:30:41,002 - src.rag.chatbot - INFO - Successfully answered question with 5 context chunks
+Bot: Based on your provided context:
+
+**Hybrid Search (vector + BM25) is better than Vector-Only Search because it improves recall accuracy without increasing latency too significantly.**
+
+The key points from your context are:
+1. **Vector-Only Search (from Context 1 and 3):**
+   - Provides the most relevant results based on the **semantic similarity** of vector embeddings.
+   - Can be accurate but limited to semantic understanding.
+   **Limited benefit in recall:** It does not rely on keyword-level matching, so it may miss some relevant documents that contain non-sematically close terms but different content.
+
+2. **BM25-based retrieval (from Context 1 and the Hybrid section in Contexts):**
+   - The *statistical statistical* BM25 algorithm is used as a second layer to capture additional relevant results from the vector store’s top candidates by doing **term matching**, even though it lacks semantic understanding.
+   **Limited benefit alone:** Without a reranking layer, its accuracy improves by only about **+10.5%** (based on *NDCG@3* metric in Context 2).
+
+3. **Adding Reranking Layer (Contexts 2 and 3):**
+   - The reranker (a secondary LLM) helps refine the results using additional semantic context, increasing accuracy to **~37.2% higher** than hybrid search alone.
+   - This layer improves precision (ranking more relevant results) by considering **contextual relevance from the LLM itself**.
+
+So, when BM25 is combined with vector search, it effectively addresses:
+- **Cheshan** in **Context 1: Hybrids search system**—this is not just a feature but a *process of combining* two techniques, one semantic (vector) and one statistical (BM25).
+   The context is about the hybrid approach and its accuracy improvement but does not explain the exact reasons for why it works better.
+
+- **Why is it better than vector-only search?**
+   Vector only systems are good at identifying documents that closely match the *semantic intent* of your query (e.g., "machine learning" or "ML algorithms").
+   But BM25 provides a **term-based retrieval** layer which captures additional relevant candidates the LLM might miss. This helps avoid the situation where the vector search picks more distant and irrelevant matches, while the reranking layer prioritizes better ones.
+
+📚 Sources: 2nd Part_Architecture & Design Patterns.pdf, Databases for GenAI.pdf, 2 part Databases for GenAI.pdf
+
+You: Which OpenAI model is better for use in RAG systems: GPT-4 or GPT-5?
+
+2025-12-06 17:31:46,070 - src.rag.chatbot - INFO - Processing question: Which OpenAI model is better for use in RAG systems: GPT-4 or GPT-5?
+Batches: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  6.93it/s]
+2025-12-06 17:31:46,225 - src.storage.vector_store - INFO - Query returned 5 results
+2025-12-06 17:31:46,227 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:31:46,227 - src.rag.llm_interface - INFO - LLM REQUEST
+2025-12-06 17:31:46,227 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:31:46,227 - src.rag.llm_interface - INFO - Model: local-model
+2025-12-06 17:31:46,227 - src.rag.llm_interface - INFO - Temperature: 0.7
+2025-12-06 17:31:46,227 - src.rag.llm_interface - INFO - Max tokens: 500
+2025-12-06 17:31:46,228 - src.rag.llm_interface - INFO - Messages:
+2025-12-06 17:31:46,228 - src.rag.llm_interface - INFO -   [0] Role: system
+2025-12-06 17:31:46,228 - src.rag.llm_interface - INFO -       Content: You are a helpful assistant answering questions about lecture content. Answer based on the context provided. If the context doesn't contain relevant information, say so clearly.
+2025-12-06 17:31:46,228 - src.rag.llm_interface - INFO -   [1] Role: user
+2025-12-06 17:31:46,228 - src.rag.llm_interface - INFO -       Content: Context:
+[Context 1]
+Host: Thank you. And the last one: Can I put RAG to my newly developed GPT and it will be very online
+and up to date? Is it it?
+Maksym: My newly developed GPT? Maybe person can unmute and just say few words what does it
+mean like newly developed GPT?
+Vasylii: Yes, so it's it's my question. So I just want to understand, do I get it right about RAGs? So if I
+have some LLM, whatever, GPT or whatever, and I want I don't want to retrain it, I just want a new
+information like from the new database. So it means that I can add this new shiny layer like RAG, as I
+understand it's like Chroma or whatever, and it will query the data from this Chroma before into the
+context window and just basically without retraining I will get all the all the information?
+Maksym: Yes. Yes. Nice. Then then then it's it's fully correct. In a simple understanding... maybe I just...
+[opens ChatGPT interface]. Just to show as a simple example of the RAG system as well. So when we
+create some projects for example in the ChatGPT, the project files that we are adding, basically that
+projects then our RAG system. Because ChatGPT just split that information to the chunks and then
+utilize that that information when we are asking questions in our chat. So this is like the simple
+representation of RAG system.
+And you can find all of that like GPTs... until you are providing the expected like behavior or instruction,
+when you just provide the the files that you wants GPTs to utilize, it will be in addition RAG system.
+
+[Context 2]
+● Augment context in order to get accurate completions.
+21
+Image by Jan Alexander from Pixabay
+Quiz Time
+2222
+Q1
+What is the main goal of RAG?
+A. To train larger models
+B. To reduce hallucinations using external knowledge
+C. To replace fine-tuning
+D. To speed up token generation
+2233
+Q2
+What is a key limitation of RAG systems?
+A. They cannot retrieve multimodal data
+B. They require GPU inference for retrieval
+C. They depend heavily on data quality and embeddings
+D. They cannot use APIs
+2244
+Q3
+What’s the next evolution beyond basic RAG?
+A. Fine-tuned GPT models
+B. Static FAQ chatbots
+C. Agentic or tool-using RAG architectures
+D. Prompt templates with zero retrieval
+2255
+Key Takeaways from the session
+Boosts factual accuracy by Reduces hallucinations, but
+grounding LLMs in real data depends on retrieval quality
+No retraining needed, Latency–complexity trade-off:
+knowledge updated via retrieval adds overhead
+data refresh
+Still limited reasoning Next evolution → Agentic,
+and context awareness monitored, tool-using RAGs
+26
+
+[Context 3]
+Chunk overlap: 15% (~75 tokens).
+Top-k retrieval: I would say like 3-5, sometimes 10 chunks.
+Embedding dimensions: Between 768 and 1536 should be enough.
+This data mainly on the research of the NVIDIA and it's kind of like golden middle data and where you
+can start when you are building your RAG systems. But then within the evaluation and testing you can
+find your exact the best size for the chunks and for your RAG system.
+[26:35] Common Challenges
+Maksym: In terms of common challenges:
+Chunking and context window: As I mentioned about the problem with the chunking. If you
+providing quite large chunks, then it means that that quite large chunk then you feed to the model,
+so we have the problem with the additional not needed information in exact that request.
+Retrieval quality: It's based on the exact system that you utilize, I mean like vector database or
+approach to the data.
+Latency & cost: For sure if we add to any system that we are developing some additional layer
+where you need to retrieve data or make some filtering, it's coming with the cost of latency.
+[27:49] Do's and Don'ts for RAG
+Maksym: Some Do's and Don'ts for the RAG system:
+Start simple: Quite often it's better to start from the simple approach, even from the simple base.
+Start from simpler systems, not utilizing from the start the enterprise grade databases.
+Evaluate: And quite important part is evaluation of your RAG pipeline. Not only like building, but
+system that will help you to make the evaluation of the quality of your pipeline is quite important.
+Don't rely solely on vector search: To build like more reliable system, not rely solely on the
+vector search. In addition you still have like your standard searches like keyword.
+Hybrid Search: We will discuss about some of the other approaches that providing much better
+results when they work together as a hybrid approach and re-ranking approach as well.
+Security and Access Control: One of the biggest problem within the RAG this is the security and
+access control. So it's quite complex to implement this sometimes, but already some of the
+systems exist and we can just utilize them.
+Overload the LLM context: Working on the balance of your chunks. It shouldn't be quite big and
+for sure shouldn't be quite small because based on that your user of your system will get the
+result that it expected.
+
+[Context 4]
+from the simplest one just for the rapid start, and when your system is growing, you are
+moving to the, let's say, next one. And each of them just fulfill their purpose.
+Advanced RAG Patterns
+Lecturer:
+And about RAG patterns in addition to the embeddings... because we discussed about the
+embeddings, vectorization... It's not only one pattern or approach for the RAG systems. In
+addition, we can have this problem with the Multi-Hop Reasoning with the connection. And in
+cases where we have a bit more vague request and we need to identify the connection for
+that request, in most cases traditional vector RAG systems, they are failing. And in the
+example that I provided, the problem that we need to have connection built from our request
+that user asked: "Marketing, budget, compliance, GDPR," and basically "Europe." And this is
+the connections. And this is exactly when we need already to utilize graph system and
+GraphRAG in addition. And it helps to increase reliability of our system together with LLM.
+And quite often this is representation of the graph that we have. And when our user making
+the request, it's just getting some of the information from the request and learning the
+different connections. And based on the connection that we have in the RAG representation, it
+can provide much better answer if we do not have explicit information and one chunk of the
+information that we are grabbing from our vector system is not enough.
+Main players for the GraphRAG solutions: So Neo4j, Falkor, TigerGraph, Memgraph, and
+ArangoDB. Mainly we are playing with the Neo4j because you can easily install it on your
+laptop, and I guess it's one of the most popular solutions I would say.
+The PDF Processing Problem
+Lecturer:
+The next problem that quite often coming: the PDF processing problem. So in a PDF, we can
+have images, in a PDF we can have tables and maybe some formulas. So it's quite complex
+documents to parse for the LLM. And in a traditional RAG pipelines, we have OCR (Optical
+Character Recognition). So basically the ML system or it can be LLM that can look exactly on
+the PDF and then provide in the text view describe what it sees on the PDF. And then we can
+just vectorize it quite easily.
+Still we have issue with the tables quite often. And here like some OCR, again, can help, some
+
+[Context 5]
+how you can leverage those products so you can do your daily work. Not necessarily limited to work,
+but you can also use that in your own private life. Then we will also discuss a bit about the pros, cons,
+and limitations.
+So today's session, the first part—the practitioner part—is mostly an overview of the current products
+that we have available so we can have the benefits of this new paradigm which is called RAG.
+Recap: What is RAG?
+Lecturer: First things first: a quick recap. In case you missed the previous sessions, or in case maybe
+something was not clear, just to provide a different perspective. I have two or three slides on what RAG
+is.
+Basically, RAG is just another software system that helps us crawl to some knowledge bases. How does
+it work? It basically starts with an initial prompt. Imagine we are asking a question. Traditionally, what
+we do with those questions is go to our database, find some data there, and then return an answer to
+that question. But more traditionally, the questions were addressed in a formal language, which we call,
+for instance, APIs, and those APIs have very clear specifications.
+The difference in the paradigm of GenAI is that we can address these prompts—these questions—in
+natural language, so in our mother tongue. But not only that; we don't only go and retrieve something
+from the knowledge base which is relevant to our question. More than that, we are initially augmenting
+that prompt—we are expanding it a bit—with some knowledge which is private. Usually, it's private; it's
+related to our organization or to our private life.
+Then we go with that question to a Large Language Model (LLM). The LLM analyzes our question
+together with the data that we retrieved here from the knowledge source and returns us an answer.
+Because the magic—the power of LLMs today—is that they can answer in our mother tongue as well.
+So we don't need that much formal, strict formats of questions or answers. We don't need necessarily
+to pass specific arguments to questions or APIs. We don't need necessarily to use JSON files and then
+retrieve a specific XML format which is further processed by another application. We don't need any of
+this. We just need our language to address the question to find something that's relevant there and
+
+Question: Which OpenAI model is better for use in RAG systems: GPT-4 or GPT-5?
+
+Answer based on the context provided above.
+2025-12-06 17:31:46,232 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:39:59,060 - httpx - INFO - HTTP Request: POST http://localhost:1234/v1/chat/completions "HTTP/1.1 200 OK"
+2025-12-06 17:39:59,062 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:39:59,063 - src.rag.llm_interface - INFO - LLM RESPONSE
+2025-12-06 17:39:59,064 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:39:59,065 - src.rag.llm_interface - INFO - Answer: Based on the context provided:
+
+**The context does not specifically mention the choice between the **OpenLLM**GPT-4** and **GPE/ChatGPT's GPT-5** for RAG systems as a specific topic. The given context primarily focuses on Chat’s general understanding of RSLs, use cases (e.g., their ability to retrieve private files without retraining), basic implementation details like vector embeddings, chunking overlap, and evaluation challenges.
+
+For the **GPT-4 vs GPT-5** discussion:
+1. While **Context 2,3, and 4** discuss GPTs and ChatGPT's use as an example, they don’t specify which version of OpenAI’s models should be used for RAG.
+2. The content refers to "GPTs" generally but does not provide a comparison with the latest or specific versions like GPT-4 or GPE.
+3. The specific advantages or disadvantages of **OpenGPT**’s GPT-4, or GPE, compared to newer models (like OpenAI's likely later GPT-5) are also not mentioned.
+
+The main discussion in your provided context:
+- Focuses on the concept and limitations of RAG systems.
+- Specifies that new information is obtained from external databases like Chroma, not specific model versions.
+- Suggests using GraphRAG (like Neo4j), hybrid search methods, and other system features to improve results.
+
+To accurately answer your question about GPT-4 or GPT-GS for RAG:
+**No, the context does not provide this information.** The given context specifically discusses the **GPT as a reference to using existing LLMs like ChatGPT with their added external knowledge database** and does not delve into specific OpenAI versions. For evaluating the best version of an OpenAI model for RAG, you’d need additional context from discussions on recent AI developments or reviews about their capabilities (e.g., updates on token efficiency, accuracy with external data, etc.).
+2025-12-06 17:39:59,068 - src.rag.llm_interface - INFO - Finish reason: stop
+2025-12-06 17:39:59,069 - src.rag.llm_interface - INFO - Model: mistralai/ministral-3-3b
+2025-12-06 17:39:59,069 - src.rag.llm_interface - INFO - Usage: CompletionUsage(completion_tokens=419, prompt_tokens=2300, total_tokens=2719)
+2025-12-06 17:39:59,070 - src.rag.llm_interface - INFO - ================================================================================
+2025-12-06 17:39:59,076 - src.rag.chatbot - INFO - Successfully answered question with 5 context chunks
+Bot: Based on the context provided:
+
+**The context does not specifically mention the choice between the **OpenLLM**GPT-4** and **GPE/ChatGPT's GPT-5** for RAG systems as a specific topic. The given context primarily focuses on Chat’s general understanding of RSLs, use cases (e.g., their ability to retrieve private files without retraining), basic implementation details like vector embeddings, chunking overlap, and evaluation challenges.
+
+For the **GPT-4 vs GPT-5** discussion:
+1. While **Context 2,3, and 4** discuss GPTs and ChatGPT's use as an example, they don’t specify which version of OpenAI’s models should be used for RAG.
+2. The content refers to "GPTs" generally but does not provide a comparison with the latest or specific versions like GPT-4 or GPE.
+3. The specific advantages or disadvantages of **OpenGPT**’s GPT-4, or GPE, compared to newer models (like OpenAI's likely later GPT-5) are also not mentioned.
+
+The main discussion in your provided context:
+- Focuses on the concept and limitations of RAG systems.
+- Specifies that new information is obtained from external databases like Chroma, not specific model versions.
+- Suggests using GraphRAG (like Neo4j), hybrid search methods, and other system features to improve results.
+
+To accurately answer your question about GPT-4 or GPT-GS for RAG:
+**No, the context does not provide this information.** The given context specifically discusses the **GPT as a reference to using existing LLMs like ChatGPT with their added external knowledge database** and does not delve into specific OpenAI versions. For evaluating the best version of an OpenAI model for RAG, you’d need additional context from discussions on recent AI developments or reviews about their capabilities (e.g., updates on token efficiency, accuracy with external data, etc.).
+
+📚 Sources: 1 part. RAG Intro.pdf, Productized & Enterprise RAG.pdf, 2 part Databases for GenAI.pdf, 1st Part_Productized Enterprise RAG.pdf
+
+You: quit
+👋 Goodbye!
+2025-12-06 17:42:07,514 - src.rag.chatbot - INFO - Closing RAG Chatbot...
+2025-12-06 17:42:07,562 - src.rag.chatbot - INFO - RAG Chatbot closed
+
+C:\IT\Training\AI_Academy\HW6>
