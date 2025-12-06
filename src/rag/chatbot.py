@@ -50,7 +50,8 @@ class RAGChatbot:
         top_k: int = 5
     ):
         """
-        Initialize the RAG chatbot with all necessary components.
+        Initialize the RAG chatbot with configuration parameters only.
+        Components are initialized lazily on first access.
         
         Args:
             model_path: Path to Vosk model for audio transcription (uses config default if not specified)
@@ -63,51 +64,199 @@ class RAGChatbot:
             llm_timeout: Maximum wait time for LLM response in seconds
             llm_debug_logging: When True, logs full LLM requests and responses
             top_k: Number of chunks to retrieve for each query
-            
-        Raises:
-            Exception: If any component fails to initialize
         """
         # Use config default if model_path not specified
         if model_path is None:
             from ..config import default_config
             model_path = default_config.vosk_model_path
+        
+        # Store configuration parameters
+        self._model_path = model_path
+        self._persist_directory = persist_directory
+        self._collection_name = collection_name
+        self._chunk_size = chunk_size
+        self._chunk_overlap = chunk_overlap
+        self._embedding_model_name = embedding_model
+        self._lm_studio_url = lm_studio_url
+        self._llm_timeout = llm_timeout
+        self._llm_debug_logging = llm_debug_logging
         self.top_k = top_k
         
-        try:
-            # Initialize document loaders
-            logger.info("Initializing document loaders...")
-            self.pdf_loader = PDFLoader()
-            self.audio_transcriber = AudioTranscriber(model_path=model_path)
-            self.video_processor = VideoProcessor(model_path=model_path)
+        # Initialize all component references to None (lazy loading)
+        self._pdf_loader = None
+        self._audio_transcriber = None
+        self._video_processor = None
+        self._text_chunker = None
+        self._embedding_model = None
+        self._vector_store = None
+        self._llm = None
+        
+        logger.info("RAG Chatbot initialized with lazy loading")
+    
+    @property
+    def vector_store(self):
+        """
+        Lazy property for vector store.
+        Initializes VectorStore on first access and caches the instance.
+        
+        Returns:
+            VectorStore: The initialized vector store instance
             
-            # Initialize text processor
-            logger.info("Initializing text chunker...")
-            self.text_chunker = TextChunker(
-                chunk_size=chunk_size,
-                chunk_overlap=chunk_overlap,
-                model_name=f"sentence-transformers/{embedding_model}"
-            )
+        Raises:
+            RuntimeError: If vector store initialization fails
+        """
+        if self._vector_store is None:
+            try:
+                logger.info("Initializing vector store...")
+                self._vector_store = VectorStore(
+                    persist_directory=self._persist_directory,
+                    collection_name=self._collection_name
+                )
+            except Exception as e:
+                raise RuntimeError(
+                    f"Failed to initialize vector store: {str(e)}"
+                ) from e
+        return self._vector_store
+    
+    @property
+    def embedding_model(self):
+        """
+        Lazy property for embedding model.
+        Initializes EmbeddingModel on first access and caches the instance.
+        
+        Returns:
+            EmbeddingModel: The initialized embedding model instance
             
-            # Initialize embedding model
-            logger.info("Initializing embedding model...")
-            self.embedding_model = EmbeddingModel(model_name=embedding_model)
+        Raises:
+            RuntimeError: If embedding model initialization fails
+        """
+        if self._embedding_model is None:
+            try:
+                logger.info("Initializing embedding model...")
+                self._embedding_model = EmbeddingModel(model_name=self._embedding_model_name)
+            except Exception as e:
+                raise RuntimeError(
+                    f"Failed to initialize embedding model: {str(e)}"
+                ) from e
+        return self._embedding_model
+    
+    @property
+    def audio_transcriber(self):
+        """
+        Lazy property for audio transcriber.
+        Initializes AudioTranscriber on first access and caches the instance.
+        
+        Returns:
+            AudioTranscriber: The initialized audio transcriber instance
             
-            # Initialize vector store
-            logger.info("Initializing vector store...")
-            self.vector_store = VectorStore(
-                persist_directory=persist_directory,
-                collection_name=collection_name
-            )
+        Raises:
+            RuntimeError: If audio transcriber initialization fails
+        """
+        if self._audio_transcriber is None:
+            try:
+                logger.info("Initializing audio transcriber...")
+                self._audio_transcriber = AudioTranscriber(model_path=self._model_path)
+            except Exception as e:
+                raise RuntimeError(
+                    f"Failed to initialize audio transcriber: {str(e)}"
+                ) from e
+        return self._audio_transcriber
+    
+    @property
+    def video_processor(self):
+        """
+        Lazy property for video processor.
+        Initializes VideoProcessor on first access and caches the instance.
+        
+        Returns:
+            VideoProcessor: The initialized video processor instance
             
-            # Initialize LLM interface
-            logger.info("Initializing LLM interface...")
-            self.llm = LLMInterface(base_url=lm_studio_url, timeout=llm_timeout, debug_logging=llm_debug_logging)
+        Raises:
+            RuntimeError: If video processor initialization fails
+        """
+        if self._video_processor is None:
+            try:
+                logger.info("Initializing video processor...")
+                self._video_processor = VideoProcessor(model_path=self._model_path)
+            except Exception as e:
+                raise RuntimeError(
+                    f"Failed to initialize video processor: {str(e)}"
+                ) from e
+        return self._video_processor
+    
+    @property
+    def pdf_loader(self):
+        """
+        Lazy property for PDF loader.
+        Initializes PDFLoader on first access and caches the instance.
+        
+        Returns:
+            PDFLoader: The initialized PDF loader instance
             
-            logger.info("RAG Chatbot initialized successfully")
+        Raises:
+            RuntimeError: If PDF loader initialization fails
+        """
+        if self._pdf_loader is None:
+            try:
+                logger.info("Initializing PDF loader...")
+                self._pdf_loader = PDFLoader()
+            except Exception as e:
+                raise RuntimeError(
+                    f"Failed to initialize PDF loader: {str(e)}"
+                ) from e
+        return self._pdf_loader
+    
+    @property
+    def text_chunker(self):
+        """
+        Lazy property for text chunker.
+        Initializes TextChunker on first access and caches the instance.
+        
+        Returns:
+            TextChunker: The initialized text chunker instance
             
-        except Exception as e:
-            logger.error(f"Failed to initialize RAG Chatbot: {str(e)}")
-            raise
+        Raises:
+            RuntimeError: If text chunker initialization fails
+        """
+        if self._text_chunker is None:
+            try:
+                logger.info("Initializing text chunker...")
+                self._text_chunker = TextChunker(
+                    chunk_size=self._chunk_size,
+                    chunk_overlap=self._chunk_overlap,
+                    model_name=f"sentence-transformers/{self._embedding_model_name}"
+                )
+            except Exception as e:
+                raise RuntimeError(
+                    f"Failed to initialize text chunker: {str(e)}"
+                ) from e
+        return self._text_chunker
+    
+    @property
+    def llm(self):
+        """
+        Lazy property for LLM interface.
+        Initializes LLMInterface on first access and caches the instance.
+        
+        Returns:
+            LLMInterface: The initialized LLM interface instance
+            
+        Raises:
+            RuntimeError: If LLM interface initialization fails
+        """
+        if self._llm is None:
+            try:
+                logger.info("Initializing LLM interface...")
+                self._llm = LLMInterface(
+                    base_url=self._lm_studio_url,
+                    timeout=self._llm_timeout,
+                    debug_logging=self._llm_debug_logging
+                )
+            except Exception as e:
+                raise RuntimeError(
+                    f"Failed to initialize LLM interface: {str(e)}"
+                ) from e
+        return self._llm
     
     def ingest_pdf(self, file_path: str) -> Dict[str, any]:
         """
