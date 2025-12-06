@@ -685,3 +685,265 @@ class TestRAGChatbot:
         chatbot.close()
         
         mock_chatbot_components['vector_store'].close.assert_called_once()
+
+
+class TestCommandSpecificComponentLoading:
+    """Test suite for verifying that commands load only their required components."""
+    
+    def test_stats_command_loads_only_vector_store(self):
+        """Test that stats command loads only vector_store."""
+        with patch('src.rag.chatbot.VectorStore') as mock_store, \
+             patch('src.rag.chatbot.EmbeddingModel') as mock_embedding, \
+             patch('src.rag.chatbot.AudioTranscriber') as mock_audio, \
+             patch('src.rag.chatbot.VideoProcessor') as mock_video, \
+             patch('src.rag.chatbot.PDFLoader') as mock_pdf, \
+             patch('src.rag.chatbot.TextChunker') as mock_chunker, \
+             patch('src.rag.chatbot.LLMInterface') as mock_llm:
+            
+            # Setup vector store mock
+            mock_store_instance = Mock()
+            mock_store_instance.count.return_value = 10
+            mock_store_instance.collection_name = "test_collection"
+            mock_store.return_value = mock_store_instance
+            
+            # Create chatbot and call get_stats
+            chatbot = RAGChatbot()
+            stats = chatbot.get_stats()
+            
+            # Verify only vector_store was initialized
+            mock_store.assert_called_once()
+            
+            # Verify other components were NOT initialized
+            mock_embedding.assert_not_called()
+            mock_audio.assert_not_called()
+            mock_video.assert_not_called()
+            mock_pdf.assert_not_called()
+            mock_chunker.assert_not_called()
+            mock_llm.assert_not_called()
+            
+            # Verify stats are correct
+            assert stats['total_documents'] == 10
+            assert stats['collection_name'] == "test_collection"
+    
+    def test_clear_command_loads_only_vector_store(self):
+        """Test that clear command loads only vector_store."""
+        with patch('src.rag.chatbot.VectorStore') as mock_store, \
+             patch('src.rag.chatbot.EmbeddingModel') as mock_embedding, \
+             patch('src.rag.chatbot.AudioTranscriber') as mock_audio, \
+             patch('src.rag.chatbot.VideoProcessor') as mock_video, \
+             patch('src.rag.chatbot.PDFLoader') as mock_pdf, \
+             patch('src.rag.chatbot.TextChunker') as mock_chunker, \
+             patch('src.rag.chatbot.LLMInterface') as mock_llm:
+            
+            # Setup vector store mock
+            mock_store_instance = Mock()
+            mock_store.return_value = mock_store_instance
+            
+            # Create chatbot and call clear_knowledge_base
+            chatbot = RAGChatbot()
+            chatbot.clear_knowledge_base()
+            
+            # Verify only vector_store was initialized
+            mock_store.assert_called_once()
+            mock_store_instance.clear.assert_called_once()
+            
+            # Verify other components were NOT initialized
+            mock_embedding.assert_not_called()
+            mock_audio.assert_not_called()
+            mock_video.assert_not_called()
+            mock_pdf.assert_not_called()
+            mock_chunker.assert_not_called()
+            mock_llm.assert_not_called()
+    
+    def test_ask_command_loads_embedding_vector_store_and_llm(self):
+        """Test that ask command loads embedding_model, vector_store, and llm."""
+        with patch('src.rag.chatbot.VectorStore') as mock_store, \
+             patch('src.rag.chatbot.EmbeddingModel') as mock_embedding, \
+             patch('src.rag.chatbot.AudioTranscriber') as mock_audio, \
+             patch('src.rag.chatbot.VideoProcessor') as mock_video, \
+             patch('src.rag.chatbot.PDFLoader') as mock_pdf, \
+             patch('src.rag.chatbot.TextChunker') as mock_chunker, \
+             patch('src.rag.chatbot.LLMInterface') as mock_llm:
+            
+            # Setup mocks
+            mock_store_instance = Mock()
+            mock_store_instance.query.return_value = [
+                {
+                    'text': 'Context chunk',
+                    'metadata': {'source': 'test.pdf', 'chunk_index': 0},
+                    'distance': 0.1
+                }
+            ]
+            mock_store.return_value = mock_store_instance
+            
+            mock_embedding_instance = Mock()
+            mock_embedding_instance.embed.return_value = [0.1] * 768
+            mock_embedding.return_value = mock_embedding_instance
+            
+            mock_llm_instance = Mock()
+            mock_llm_instance.generate.return_value = "Answer"
+            mock_llm.return_value = mock_llm_instance
+            
+            # Create chatbot and ask question
+            chatbot = RAGChatbot()
+            result = chatbot.ask("What is AI?")
+            
+            # Verify required components were initialized
+            mock_embedding.assert_called_once()
+            mock_store.assert_called_once()
+            mock_llm.assert_called_once()
+            
+            # Verify transcription components were NOT initialized
+            mock_audio.assert_not_called()
+            mock_video.assert_not_called()
+            
+            # Verify other components were NOT initialized
+            mock_pdf.assert_not_called()
+            mock_chunker.assert_not_called()
+            
+            # Verify result
+            assert result['answer'] == "Answer"
+    
+    def test_ingest_pdf_loads_pdf_chunker_embedding_vector_store(self):
+        """Test that ingest_pdf loads pdf_loader, text_chunker, embedding_model, vector_store."""
+        with patch('src.rag.chatbot.VectorStore') as mock_store, \
+             patch('src.rag.chatbot.EmbeddingModel') as mock_embedding, \
+             patch('src.rag.chatbot.AudioTranscriber') as mock_audio, \
+             patch('src.rag.chatbot.VideoProcessor') as mock_video, \
+             patch('src.rag.chatbot.PDFLoader') as mock_pdf, \
+             patch('src.rag.chatbot.TextChunker') as mock_chunker, \
+             patch('src.rag.chatbot.LLMInterface') as mock_llm:
+            
+            # Setup mocks
+            mock_pdf_instance = Mock()
+            mock_pdf_instance.load.return_value = "PDF content"
+            mock_pdf.return_value = mock_pdf_instance
+            
+            mock_chunker_instance = Mock()
+            mock_chunker_instance.chunk_with_metadata.return_value = [
+                {'text': 'Chunk', 'source': 'test.pdf', 'chunk_index': 0}
+            ]
+            mock_chunker.return_value = mock_chunker_instance
+            
+            mock_embedding_instance = Mock()
+            mock_embedding_instance.embed_batch.return_value = [[0.1] * 768]
+            mock_embedding.return_value = mock_embedding_instance
+            
+            mock_store_instance = Mock()
+            mock_store.return_value = mock_store_instance
+            
+            # Create chatbot and ingest PDF
+            chatbot = RAGChatbot()
+            result = chatbot.ingest_pdf("test.pdf")
+            
+            # Verify required components were initialized
+            mock_pdf.assert_called_once()
+            mock_chunker.assert_called_once()
+            mock_embedding.assert_called_once()
+            mock_store.assert_called_once()
+            
+            # Verify transcription components were NOT initialized
+            mock_audio.assert_not_called()
+            mock_video.assert_not_called()
+            
+            # Verify LLM was NOT initialized
+            mock_llm.assert_not_called()
+            
+            # Verify result
+            assert result['success'] is True
+    
+    def test_ingest_audio_loads_audio_chunker_embedding_vector_store(self):
+        """Test that ingest_audio loads audio_transcriber, text_chunker, embedding_model, vector_store."""
+        with patch('src.rag.chatbot.VectorStore') as mock_store, \
+             patch('src.rag.chatbot.EmbeddingModel') as mock_embedding, \
+             patch('src.rag.chatbot.AudioTranscriber') as mock_audio, \
+             patch('src.rag.chatbot.VideoProcessor') as mock_video, \
+             patch('src.rag.chatbot.PDFLoader') as mock_pdf, \
+             patch('src.rag.chatbot.TextChunker') as mock_chunker, \
+             patch('src.rag.chatbot.LLMInterface') as mock_llm:
+            
+            # Setup mocks
+            mock_audio_instance = Mock()
+            mock_audio_instance.transcribe.return_value = "Audio transcription"
+            mock_audio.return_value = mock_audio_instance
+            
+            mock_chunker_instance = Mock()
+            mock_chunker_instance.chunk_with_metadata.return_value = [
+                {'text': 'Chunk', 'source': 'test.mp3', 'chunk_index': 0}
+            ]
+            mock_chunker.return_value = mock_chunker_instance
+            
+            mock_embedding_instance = Mock()
+            mock_embedding_instance.embed_batch.return_value = [[0.1] * 768]
+            mock_embedding.return_value = mock_embedding_instance
+            
+            mock_store_instance = Mock()
+            mock_store.return_value = mock_store_instance
+            
+            # Create chatbot and ingest audio
+            chatbot = RAGChatbot()
+            result = chatbot.ingest_audio("test.mp3")
+            
+            # Verify required components were initialized
+            mock_audio.assert_called_once()
+            mock_chunker.assert_called_once()
+            mock_embedding.assert_called_once()
+            mock_store.assert_called_once()
+            
+            # Verify other transcription components were NOT initialized
+            mock_video.assert_not_called()
+            mock_pdf.assert_not_called()
+            
+            # Verify LLM was NOT initialized
+            mock_llm.assert_not_called()
+            
+            # Verify result
+            assert result['success'] is True
+    
+    def test_ingest_video_loads_video_chunker_embedding_vector_store(self):
+        """Test that ingest_video loads video_processor, text_chunker, embedding_model, vector_store."""
+        with patch('src.rag.chatbot.VectorStore') as mock_store, \
+             patch('src.rag.chatbot.EmbeddingModel') as mock_embedding, \
+             patch('src.rag.chatbot.AudioTranscriber') as mock_audio, \
+             patch('src.rag.chatbot.VideoProcessor') as mock_video, \
+             patch('src.rag.chatbot.PDFLoader') as mock_pdf, \
+             patch('src.rag.chatbot.TextChunker') as mock_chunker, \
+             patch('src.rag.chatbot.LLMInterface') as mock_llm:
+            
+            # Setup mocks
+            mock_video_instance = Mock()
+            mock_video_instance.process_video.return_value = "Video transcription"
+            mock_video.return_value = mock_video_instance
+            
+            mock_chunker_instance = Mock()
+            mock_chunker_instance.chunk_with_metadata.return_value = [
+                {'text': 'Chunk', 'source': 'test.mp4', 'chunk_index': 0}
+            ]
+            mock_chunker.return_value = mock_chunker_instance
+            
+            mock_embedding_instance = Mock()
+            mock_embedding_instance.embed_batch.return_value = [[0.1] * 768]
+            mock_embedding.return_value = mock_embedding_instance
+            
+            mock_store_instance = Mock()
+            mock_store.return_value = mock_store_instance
+            
+            # Create chatbot and ingest video
+            chatbot = RAGChatbot()
+            result = chatbot.ingest_video("test.mp4")
+            
+            # Verify required components were initialized
+            mock_video.assert_called_once()
+            mock_chunker.assert_called_once()
+            mock_embedding.assert_called_once()
+            mock_store.assert_called_once()
+            
+            # Verify other transcription components were NOT initialized
+            mock_audio.assert_not_called()
+            mock_pdf.assert_not_called()
+            
+            # Verify LLM was NOT initialized
+            mock_llm.assert_not_called()
+            
+            # Verify result
+            assert result['success'] is True
