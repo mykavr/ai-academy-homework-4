@@ -38,7 +38,7 @@ class RAGChatbot:
     
     def __init__(
         self,
-        model_path: str = "models/vosk-model-small-en-us-0.15",
+        model_path: str = None,
         persist_directory: Optional[str] = None,
         collection_name: str = "documents",
         chunk_size: int = 512,
@@ -53,7 +53,7 @@ class RAGChatbot:
         Initialize the RAG chatbot with all necessary components.
         
         Args:
-            model_path: Path to Vosk model for audio transcription
+            model_path: Path to Vosk model for audio transcription (uses config default if not specified)
             persist_directory: Directory for persistent vector storage (None for in-memory)
             collection_name: Name of the vector store collection
             chunk_size: Maximum tokens per chunk
@@ -67,6 +67,10 @@ class RAGChatbot:
         Raises:
             Exception: If any component fails to initialize
         """
+        # Use config default if model_path not specified
+        if model_path is None:
+            from ..config import default_config
+            model_path = default_config.vosk_model_path
         self.top_k = top_k
         
         try:

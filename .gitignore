@@ -39,6 +39,7 @@ ENV/
 htmlcov/
 .tox/
 .hypothesis/
+data/
 
 # Vosk models (large files, download separately)
 models/*

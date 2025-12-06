@@ -46,16 +46,20 @@ class AudioTranscriber:
         '.flac', '.ogg', '.opus', '.webm', '.wma'
     }
     
-    def __init__(self, model_path: str = "models/vosk-model-small-en-us-0.15"):
+    def __init__(self, model_path: str = None):
         """
         Initialize the AudioTranscriber with a Vosk model.
         
         Args:
-            model_path: Path to the Vosk model directory
+            model_path: Path to the Vosk model directory (uses config default if not specified)
                        
         Raises:
             TranscriptionError: If Vosk or the model fails to load
         """
+        # Import here to avoid circular dependency
+        if model_path is None:
+            from ..config import default_config
+            model_path = default_config.vosk_model_path
         if not VOSK_AVAILABLE:
             raise TranscriptionError(
                 "Vosk library is not available. Please install vosk: pip install vosk"

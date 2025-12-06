@@ -37,16 +37,20 @@ class VideoProcessor:
         '.mp4', '.avi', '.mov', '.mkv', '.webm', '.flv', '.wmv', '.m4v', '.mpg', '.mpeg'
     }
     
-    def __init__(self, model_path: str = "models/vosk-model-small-en-us-0.15"):
+    def __init__(self, model_path: str = None):
         """
         Initialize the VideoProcessor with an audio transcriber.
         
         Args:
-            model_path: Path to the Vosk model directory for transcription
+            model_path: Path to the Vosk model directory for transcription (uses config default if not specified)
                        
         Raises:
             VideoProcessingError: If moviepy is not available or transcriber fails to initialize
         """
+        # Import here to avoid circular dependency
+        if model_path is None:
+            from ..config import default_config
+            model_path = default_config.vosk_model_path
         if not MOVIEPY_AVAILABLE:
             raise VideoProcessingError(
                 "moviepy library is not available. Please install moviepy: pip install moviepy"

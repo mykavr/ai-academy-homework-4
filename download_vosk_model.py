@@ -47,6 +47,7 @@ def download_vosk_model(model_name="vosk-model-small-en-us-0.15", models_dir="./
         "vosk-model-small-en-us-0.15": "https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip",
         "vosk-model-en-us-0.22": "https://alphacephei.com/vosk/models/vosk-model-en-us-0.22.zip",
         "vosk-model-small-en-us-0.22": "https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.22.zip",
+        "vosk-model-en-us-0.42-gigaspeech": "https://alphacephei.com/vosk/models/vosk-model-en-us-0.42-gigaspeech.zip",
     }
     
     if model_name not in model_urls:
@@ -92,14 +93,17 @@ if __name__ == "__main__":
     print("Available models:")
     print("  1. vosk-model-small-en-us-0.15 (40MB, recommended)")
     print("  2. vosk-model-en-us-0.22 (1.8GB, best accuracy)")
+    print("  3. vosk-model-en-us-0.42-gigaspeech (2.3GB)")
     print()
     
-    choice = input("Select model (1 or 2, default=1): ").strip() or "1"
+    choice = input("Select model (1, 2, or 3, default=1): ").strip() or "1"
     
     if choice == "1":
         model_name = "vosk-model-small-en-us-0.15"
     elif choice == "2":
         model_name = "vosk-model-en-us-0.22"
+    elif choice == "3":
+        model_name = "vosk-model-en-us-0.42-gigaspeech"
     else:
         print("Invalid choice. Using default model.")
         model_name = "vosk-model-small-en-us-0.15"
