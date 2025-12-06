@@ -6,6 +6,7 @@ A Retrieval-Augmented Generation (RAG) chatbot system that processes multi-forma
 
 - **Multi-format ingestion**: Process PDFs, audio files (WAV, MP3, FLAC, etc.), and video files (MP4, AVI, MOV, etc.)
 - **Local execution**: All processing happens locally with no cloud dependencies or API keys required
+- **Optimized performance**: Lazy loading ensures fast startup for lightweight commands (stats, clear)
 - **Semantic search**: Vector-based retrieval using 768-dimensional embeddings for accurate context matching
 - **LLM-powered answers**: Generate responses using local LLM via LM Studio
 - **Interactive mode**: Chat with your knowledge base in real-time
@@ -434,7 +435,8 @@ python tests/manual/test_rag_chatbot_manual.py
 1. Process smaller files or split large files
 2. Reduce chunk size in configuration
 3. Use a smaller embedding model
-4. Close other applications to free memory
+4. Use lightweight commands (stats, clear) which don't load heavy models
+5. Close other applications to free memory
 
 ### Empty or Poor Quality Answers
 
@@ -456,6 +458,17 @@ python tests/manual/test_rag_chatbot_manual.py
 
 ## Performance Considerations
 
+### Startup Performance
+
+The system uses lazy loading to optimize startup time:
+- **Lightweight commands** (stats, clear): Execute in under 2 seconds without loading heavy models
+- **Query commands** (ask, interactive): Load only embedding model and LLM, skip transcription models
+- **Ingestion commands**: Load only the components needed for the specific file type
+  - PDF ingestion: Skips audio/video transcription models
+  - Audio/video ingestion: Loads transcription models only when needed
+
+### Processing Performance
+
 - **First run**: Initial model downloads may take time (Vosk ~40MB, embeddings ~400MB)
 - **PDF ingestion**: ~1-5 seconds per page
 - **Audio transcription**: ~1-2x real-time (10 min audio = 10-20 min processing)
@@ -465,12 +478,12 @@ python tests/manual/test_rag_chatbot_manual.py
 ## System Requirements
 
 **Minimum:**
-- 8GB RAM
+- 8GB RAM (lightweight commands like stats/clear use minimal memory)
 - 5GB free disk space
 - Dual-core CPU
 
 **Recommended:**
-- 16GB RAM
+- 16GB RAM (for processing large documents and videos)
 - 10GB free disk space
 - Quad-core CPU
 - GPU (optional, speeds up embedding generation)

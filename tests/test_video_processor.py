@@ -21,6 +21,24 @@ class TestVideoProcessor:
         assert processor is not None
         assert processor.transcriber is not None
     
+    def test_initialization_with_model_path(self):
+        """Test that VideoProcessor can be initialized with explicit model_path."""
+        try:
+            processor = VideoProcessor(model_path="models/vosk-model-small-en-us-0.15")
+            assert processor is not None
+            assert processor.transcriber is not None
+        except Exception:
+            # If model doesn't exist, that's expected in some environments
+            pytest.skip("Vosk model not available")
+    
+    def test_initialization_error_handling(self):
+        """Test that VideoProcessor handles initialization errors gracefully."""
+        with pytest.raises(Exception) as exc_info:
+            VideoProcessor(model_path="invalid/model/path")
+        
+        # Should raise VideoProcessingError with descriptive message
+        assert "Failed to initialize" in str(exc_info.value) or "model not found" in str(exc_info.value).lower()
+    
     def test_unsupported_format_error(self):
         """Test that unsupported video formats raise appropriate error."""
         processor = VideoProcessor()

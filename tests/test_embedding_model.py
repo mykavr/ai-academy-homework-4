@@ -13,6 +13,21 @@ class TestEmbeddingModel:
         """Create an EmbeddingModel instance for testing."""
         return EmbeddingModel()
     
+    def test_initialization_with_default_model(self):
+        """Test that EmbeddingModel can be initialized with default model."""
+        model = EmbeddingModel()
+        assert model is not None
+        assert model.model_name == "all-mpnet-base-v2"
+        assert model.model is not None
+    
+    def test_initialization_with_custom_model_name(self):
+        """Test that EmbeddingModel can be initialized with custom model_name."""
+        # Use a valid alternative model
+        model = EmbeddingModel(model_name="all-MiniLM-L6-v2")
+        assert model is not None
+        assert model.model_name == "all-MiniLM-L6-v2"
+        assert model.model is not None
+    
     def test_embedding_generation_with_sample_text(self, embedding_model):
         """Test that embedding generation works with sample text."""
         text = "This is a sample text for testing embeddings."
